@@ -1,0 +1,13 @@
+# OS files
+.DS_Store
+._*
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*~
+
+# Temp
+*.tmp
+*.log
