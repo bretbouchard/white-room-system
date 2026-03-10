@@ -16,6 +16,98 @@ Sound Substrate is the **audio engine** that powers White Room's instruments. It
 
 ---
 
+## DSP-First Architecture
+
+### Philosophy
+
+White Room is built on a **DSP-first** foundation, not tied to low-level framework dependencies. The audio engine is abstracted from any specific platform API:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    APPLICATION LAYER                         │
+│                    (SwiftUI / Native UI)                     │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│                    SOUND SUBSTRATE                           │
+│                    (Pure DSP Layer)                          │
+│                                                              │
+│   ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐          │
+│   │Additive │ │Granular │ │ Modal   │ │Spectral │ ...      │
+│   └─────────┘ └─────────┘ └─────────┘ └─────────┘          │
+│                                                              │
+│   No JUCE dependencies | No platform-specific code          │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│                    PLATFORM LAYER                            │
+│   AudioUnit v3  │  VST3  │  CLAP  │  LV2  │  Standalone    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+This separation means:
+- **Same DSP code** runs on all platforms
+- **No vendor lock-in** to any single framework
+- **Easy porting** to new platforms and formats
+- **Consistent sound** across all targets
+
+---
+
+## Platform Coverage
+
+### The Apple TV Threshold
+
+**Apple TV was our high water mark.**
+
+tvOS has no support for external synths or effects — no AudioUnit hosting, no plugin loading. If White Room works on Apple TV, it works everywhere:
+
+| Platform | External Plugins | White Room |
+|----------|------------------|------------|
+| **tvOS** | ❌ Not supported | ✅ Built-in |
+| **iOS** | ✅ AUv3 hosting | ✅ Native |
+| **macOS** | ✅ AU/VST3/CLAP | ✅ Native |
+| **visionOS** | ⚠️ Limited | ✅ Native |
+| **Windows** | ✅ VST3/CLAP | ✅ Portable |
+| **Linux** | ✅ LV2/CLAP | ✅ Portable |
+
+**We built for the TV so we could work everywhere.**
+
+### Supported Formats
+
+| Format | Platforms | Status |
+|--------|-----------|--------|
+| **AUv3** | iOS, macOS, tvOS, visionOS | ✅ Primary |
+| **VST3** | macOS, Windows, Linux | ✅ Supported |
+| **CLAP** | macOS, Windows, Linux | ✅ Supported |
+| **LV2** | Linux | ✅ Supported |
+| **Standalone** | All platforms | ✅ Development |
+
+---
+
+## Sample-Based Instruments
+
+### Open Source + DDSP
+
+In addition to synthesis engines, White Room includes sample-based instruments built with:
+
+- **Open source sample libraries** — High-quality recordings, community-maintained
+- **DDSP (Differentiable Digital Signal Processing)** — Neural synthesis that combines DSP with ML
+
+### Available Instruments
+
+| Instrument | Source | Technology |
+|------------|--------|------------|
+| **Piano** | Open source samples | DDSP-enhanced |
+| **Orchestral** | Open source samples | DDSP-enhanced |
+
+**DDSP advantages:**
+- Realistic timbral transitions
+- Expressive control beyond velocity
+- Smaller memory footprint than pure sampling
+- Combines neural networks with interpretable DSP
+
+---
+
 ## Synthesis Engines
 
 ### Additive

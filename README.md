@@ -31,10 +31,11 @@ The mixing and signal routing infrastructure.
 
 ### [DSP](./dsp/) — Sound Substrate
 The synthesis and audio processing engines.
+- **DSP-first architecture** — Not tied to JUCE or framework dependencies
 - Synthesizer engines (Additive, Granular, Modal, Spectral, Chaos)
-- Voice architecture
-- Effect processors
-- Real-time audio constraints
+- Sample-based instruments with DDSP (Piano, Orchestral)
+- Voice architecture and effect processors
+- Cross-platform: iOS, macOS, **tvOS**, visionOS, Windows, Linux
 
 ### [AI](./ai/) — Machine Learning
 The ML and intelligence components.
@@ -101,8 +102,20 @@ This is a **System Atlas** — public architecture documentation for a private c
 | Theory | Swift, Schillinger algorithms |
 | Songwriting | Swift, natural language processing |
 | Mixing | SwiftUI, Combine, AUv3 hosting |
-| DSP | JUCE, C++20, real-time audio |
+| DSP | Pure C++20, DDSP, JUCE (optional wrapper), real-time audio |
 | AI | Python, ML models, MCP agents |
+
+---
+
+## Platform Strategy
+
+**Built for Apple TV → Works everywhere.**
+
+Apple TV has no external synth or effect support. By targeting tvOS as our high water mark, we ensured White Room is self-contained and portable across all platforms:
+
+- **Apple Ecosystem**: iOS, macOS, tvOS, visionOS (AUv3)
+- **Desktop**: Windows, Linux (VST3, CLAP, LV2)
+- **Mobile**: iOS, iPadOS (AUv3, Standalone)
 
 ---
 
