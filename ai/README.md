@@ -1,14 +1,14 @@
 # AI — Machine Learning
 
-The intelligence layer for White Room.
+ML assistance for White Room.
 
 ---
 
 ## What This Is
 
-The AI layer provides intelligent assistance for music composition:
+The AI layer provides ML assistance for music composition:
 
-- **Composition assistance** — Suggest musical ideas
+- **Composition suggestions** — Ideas when you're stuck
 - **Audio analysis** — Understand existing audio
 - **Style modeling** — Learn from reference tracks
 - **Agent orchestration** — Coordinate multiple AI tasks

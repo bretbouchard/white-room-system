@@ -1,6 +1,6 @@
 # White Room System
 
-Architecture documentation for **White Room** — an AI-powered music composition environment.
+Architecture documentation for **White Room** — a theory-powered music composition environment.
 
 This repository documents the six core domains of White Room:
 
@@ -37,7 +37,7 @@ The synthesis and audio processing engines.
 - Cross-platform: iOS, macOS, **tvOS**, visionOS, Windows, Linux
 
 ### [AI](./ai/) — Machine Learning
-The ML and intelligence components.
+ML assistance layer.
 - Composition assistance
 - Audio analysis
 - Style modeling

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repository Is
 
-This is a **System Atlas** — public architecture documentation for White Room, a private AI-powered music composition environment. It documents architecture, design decisions, patterns, and technology choices. The actual source code lives elsewhere.
+This is a **System Atlas** — public architecture documentation for White Room, a theory-powered music composition environment. It documents architecture, design decisions, patterns, and technology choices. The actual source code lives elsewhere.
 
 ## The Six Domains
 
