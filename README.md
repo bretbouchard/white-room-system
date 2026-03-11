@@ -17,7 +17,6 @@ The mathematical foundation for composition.
 
 ### [Songwriting](./songwriting/) — Creative Application
 The craft of turning theory into songs.
-- Lyric writing and phrasing
 - Song structure and arrangement
 - Hook construction
 - Emotional arc design

@@ -46,7 +46,6 @@ Mathematical foundation based on Joseph Schillinger's composition system (1946):
 
 ### Songwriting (`/songwriting/`)
 Creative application of theory:
-- Lyric writing with Schillinger phrasing
 - Song structure (AAA, AABA, Verse-Chorus)
 - Hook construction using resultants
 - Emotional arc design

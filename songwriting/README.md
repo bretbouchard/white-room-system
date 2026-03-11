@@ -8,7 +8,6 @@ The craft of turning musical theory into complete songs.
 
 Songwriting bridges the gap between Schillinger theory and actual compositions. While Theory provides the mathematical foundation, Songwriting applies those principles to create emotionally resonant music:
 
-- **Lyric writing** — Words that fit musical phrases
 - **Song structure** — Verse, chorus, bridge organization
 - **Hook construction** — Memorable melodic/rhythmic motifs
 - **Emotional arc** — Journey from beginning to end
@@ -65,34 +64,6 @@ Verse → Chorus → Verse → Chorus → Bridge → Chorus
 
 ---
 
-## Lyric Writing
-
-### Phrasing with Schillinger
-
-Schillinger's **distribution** concepts apply to lyric placement:
-
-```
-Bar 1        Bar 2        Bar 3        Bar 4
-│            │            │            │
-●   ○   ○    ●   ○   ○    ●   ○   ○    ●   ○   ○
-The  sun  is  ri  sing  up  o   ver  the  hills
-
-● = Primary stress (important words)
-○ = Secondary (connecting words)
-```
-
-### Syllable Counting
-
-Using Schillinger's rhythmic theory for natural phrasing:
-
-| Meter | Syllables per line | Example |
-|-------|-------------------|---------|
-| 4/4 | 7-9 | "Walking down this lonely road tonight" |
-| 3/4 | 6-8 | "Dancing in the rain" |
-| 6/8 | 9-12 | "Rolling down the river, going with the flow" |
-
----
-
 ## Hook Construction
 
 ### Melodic Hooks
@@ -123,9 +94,8 @@ Creates memorable, syncopated hooks
 
 | Type | Example Usage |
 |------|---------------|
-| **Melodic** | Lead synth line, vocal melody |
+| **Melodic** | Lead synth line, instrumental melody |
 | **Rhythmic** | Drum pattern, bass groove |
-| **Lyric** | Catchy phrase, memorable line |
 | **Production** | Signature sound, effect |
 
 ---
@@ -207,7 +177,6 @@ Texture (Choral)        ██████████████████�
 ┌─────────────────────┐
 │  SONGWRITING LAYER  │
 │  Creative choices   │
-│  - Lyrics           │
 │  - Form             │
 │  - Hooks            │
 │  - Emotional arc    │
@@ -233,7 +202,6 @@ The AI Composition Agent can:
 
 | Task | Input | Output |
 |------|-------|--------|
-| Generate lyrics | Theme, mood, style | Lyric options |
 | Suggest structure | Genre, length | Section arrangement |
 | Create hooks | Style reference | Melodic/rhythmic motifs |
 | Analyze arc | Song sections | Energy curve feedback |
@@ -241,22 +209,19 @@ The AI Composition Agent can:
 ### Example AI Workflow
 
 ```
-User: "Write a chorus about hope"
+User: "Create a hook for the chorus"
 
 AI Composition Agent:
 1. Analyzes current song context (key, tempo, style)
-2. Generates 3 lyric options with different approaches
-3. Suggests melodic contour using Schillinger theory
+2. Generates 3 melodic options with different contours
+3. Suggests rhythmic patterns using Schillinger resultants
 4. Recommends hook placement based on energy arc
 
 Output:
 ┌─────────────────────────────────────┐
-│ Option 1: Rising hope (arch contour)│
-│ "Tomorrow's calling, I can hear it  │
-│  Rising up, rising up"              │
-│                                     │
+│ Option 1: Rising melody (arch contour)│
 │ Melody: C4 → E4 → G4 → C5 (arch)    │
-│ Hook: "Rising up" on syncopated 2&  │
+│ Hook placement: Syncopated 2&             │
 └─────────────────────────────────────┘
 ```
 
@@ -270,7 +235,6 @@ Before a song is complete:
 
 - [ ] **Form** — Clear structure with contrast
 - [ ] **Hook** — Memorable moment in each section
-- [ ] **Lyrics** — Natural phrasing, consistent meter
 - [ ] **Arc** — Emotional journey from start to end
 - [ ] **Arrangement** — Parts fit frequency range
 - [ ] **House Band** — Appropriate instrument assignments
