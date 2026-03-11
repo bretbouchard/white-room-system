@@ -6,13 +6,15 @@ Architecture documentation for **White Room** — a theory-powered music composi
 
 ## The Concept
 
-A blank canvas with depth.
+Hundreds of years ago, composing began in silence.
+You sat in a quiet room. Every tool within reach. A blank sheet of staff paper waiting for the first mark.
 
-Hundreds of years ago, you would have pulled out a blank sheet of paper. Or staff paper. A silent room where every tool you need is within reach, and nothing you don't.
+White Room is that room — rebuilt for today.
 
-White Room is that space, modernized. An empty studio waiting for your ideas. Every instrument, every effect, every theory — all there when you need them, invisible when you don't.
+A canvas with depth. Instruments, effects, and theory surrounding you.
+Present when needed. Invisible when not.
 
-*In the white room with black curtains, near the station...*
+*In the white room with black curtains, near the station…*
 
 ---
 
