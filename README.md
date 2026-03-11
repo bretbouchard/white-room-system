@@ -2,11 +2,11 @@
 
 Architecture documentation for **White Room** — an AI-powered music composition environment.
 
-This repository documents the five core domains of White Room:
+This repository documents the six core domains of White Room:
 
 ---
 
-## The Five Domains
+## The Six Domains
 
 ### [Theory](./theory/) — Schillinger System
 The mathematical foundation for composition.
@@ -44,11 +44,25 @@ The ML and intelligence components.
 - Style modeling
 - Agent orchestration
 
+### [Frontend](./frontend/) — Application Layer
+The Swift application that brings everything together.
+- SwiftUI interface
+- XCFramework integration
+- Platform support (iOS, macOS, tvOS, visionOS)
+- Future expansion (Web, Android, Desktop)
+
 ---
 
 ## Architecture Overview
 
 ```
+┌─────────────────────────────────────────────────────────────┐
+│                       FRONTEND                               │
+│                    Application Layer                         │
+│              (SwiftUI, XCFramework, Platform UI)             │
+└─────────────────────────┬───────────────────────────────────┘
+                          │ integrates all domains
+                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                         THEORY                               │
 │                    Schillinger System                        │
@@ -99,6 +113,7 @@ This is a **System Atlas** — public architecture documentation for a private c
 
 | Domain | Technologies |
 |--------|-------------|
+| Frontend | Swift, SwiftUI, Combine, XCFramework |
 | Theory | Swift, Schillinger algorithms |
 | Songwriting | Swift, natural language processing |
 | Mixing | SwiftUI, Combine, AUv3 hosting |
