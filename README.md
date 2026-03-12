@@ -103,14 +103,14 @@ This is a **System Atlas** — public architecture documentation for a private c
 
 ## Technology Stack
 
-| Pillar | Layer | Technologies |
-|--------|-------|-------------|
-| Song | Theory | Swift, Schillinger algorithms |
-| Song | Songwriting | Swift |
-| Sound | DSP | Pure C++20, DDSP, real-time audio |
-| Sound | Mixing | SwiftUI, Combine, AUv3 hosting |
-| System | Frontend | Swift, SwiftUI, Combine, XCFramework |
-| System | ML | Python, ML models |
+| Section | Layer | Technologies | Purpose |
+|---------|-------|--------------|---------|
+| Song | Theory | Swift, Schillinger algorithms | Mathematical composition |
+| Song | Songwriting | Swift | Creative application |
+| Sound | DSP | Pure C++20, DDSP, real-time audio | Synthesis engines |
+| Sound | Mixing | SwiftUI, Combine, AUv3 hosting | ConsoleX mixer |
+| System | Frontend | Swift, SwiftUI, Combine, XCFramework | Application layer |
+| System | ML | Python, ML models | Optional assistance |
 
 ---
 
