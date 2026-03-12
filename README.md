@@ -71,16 +71,19 @@ The application layer. Frontend and ML combined.
 ```mermaid
 graph LR
     subgraph SYSTEM["SYSTEM"]
+        direction TB
         Frontend["Frontend<br/>SwiftUI"]
         ML["ML<br/>Python"]
     end
 
     subgraph SONG["SONG"]
+        direction TB
         Theory["Theory<br/>Schillinger"]
         Songwriting["Songwriting<br/>Creative"]
     end
 
     subgraph SOUND["SOUND"]
+        direction TB
         DSP["DSP<br/>C++20"]
         Mixing["Mixing<br/>ConsoleX"]
     end
