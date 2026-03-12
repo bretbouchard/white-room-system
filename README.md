@@ -18,9 +18,9 @@ Present when needed. Invisible when not.
 
 ---
 
-## Three Pillars
+## Three Sections
 
-White Room is built on three pillars: **Song**, **Sound**, and **System**.
+White Room is built on three sections: **Song**, **Sound**, and **System**.
 
 ### [Song](./song/)
 Your composition. Theory and craft combined.
