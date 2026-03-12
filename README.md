@@ -43,9 +43,9 @@ Your instruments and mix. DSP and routing combined.
 - **[DSP](./sound/dsp/)** — Sound Substrate
   - DSP-first architecture (no framework dependencies)
   - 27 instruments across 5 categories, powered by 10+ synthesis engines
+  - 15 effects, ConsoleX bus mixer
 
-- **[Mixing](./sound/mixing/)** — ConsoleX
-  - Mixer architecture
+- **[Mixing](./sound/mixing/)** — ConsoleX Mixing Mixer Architecture
   - Bus routing (aux, groups, master)
   - Effect chains
   - Channel strips
