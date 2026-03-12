@@ -69,27 +69,26 @@ The application layer. Frontend and ML combined.
 ## Architecture Overview
 
 ```mermaid
-graph LR
+flowchart LR
     subgraph SYSTEM["SYSTEM"]
-        direction TB
         Frontend["Frontend<br/>SwiftUI"]
         ML["ML<br/>Python"]
+        Frontend ~~~ ML
     end
 
     subgraph SONG["SONG"]
-        direction TB
         Theory["Theory<br/>Schillinger"]
         Songwriting["Songwriting<br/>Creative"]
+        Theory ~~~ Songwriting
     end
 
     subgraph SOUND["SOUND"]
-        direction TB
         DSP["DSP<br/>C++20"]
         Mixing["Mixing<br/>ConsoleX"]
+        DSP ~~~ Mixing
     end
 
-    SYSTEM --> SONG
-    SONG --> SOUND
+    SYSTEM --> SONG --> SOUND
 ```
 
 ---
