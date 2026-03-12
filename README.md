@@ -18,53 +18,51 @@ Present when needed. Invisible when not.
 
 ---
 
-This repository documents the six core domains of White Room:
+## Three Pillars
 
----
+White Room is built on three pillars: **Song**, **Sound**, and **System**.
 
-## The Six Domains
+### [Song](./song/)
+Your composition. Theory and craft combined.
 
-### [Theory](./theory/) — Schillinger System
-The mathematical foundation for composition.
-- Rhythm resultants and interference patterns
-- Melodic contour and motivic development
-- Harmonic progressions and voice leading
-- Orchestration and form
+- **[Theory](./song/theory/)** — Schillinger System
+  - Rhythm resultants and interference patterns
+  - Melodic contour and motivic development
+  - Harmonic progressions and voice leading
+  - Orchestration and form
 
-### [Songwriting](./songwriting/) — Creative Application
-The craft of turning theory into songs.
-- Song structure and arrangement
-- Hook construction
-- Emotional arc design
+- **[Songwriting](./song/songwriting/)** — Creative Application
+  - Song structure and arrangement
+  - Hook construction
+  - Emotional arc design
 
-### [Mixing](./mixing/) — ConsoleX
-The mixing and signal routing infrastructure.
-- ConsoleX mixer architecture
-- Bus routing (aux, groups, master)
-- Instrument channels
-- Effect chains
+### [Sound](./sound/)
+Your instruments and mix. DSP and routing combined.
 
-### [DSP](./dsp/) — Sound Substrate
-The synthesis and audio processing engines.
-- **DSP-first architecture** — Not tied to JUCE or framework dependencies
-- Synthesizer engines (Additive, Granular, Modal, Spectral, Chaos)
-- Sample-based instruments with DDSP (Piano, Orchestral)
-- Voice architecture and effect processors
-- Cross-platform: iOS, macOS, **tvOS**, visionOS, Windows, Linux
+- **[DSP](./sound/dsp/)** — Sound Substrate
+  - DSP-first architecture (no framework dependencies)
+  - Synthesizer engines (Additive, Granular, Modal, Spectral, Chaos)
+  - Sample-based instruments with DDSP
+  - Cross-platform: iOS, macOS, tvOS, visionOS, Windows, Linux
 
-### [AI](./ai/) — Machine Learning
-ML assistance layer.
-- Composition assistance
-- Audio analysis
-- Style modeling
-- Agent orchestration
+- **[Mixing](./sound/mixing/)** — ConsoleX
+  - Mixer architecture
+  - Bus routing (aux, groups, master)
+  - Effect chains
+  - Channel strips
 
-### [Frontend](./frontend/) — Application Layer
-The Swift application that brings everything together.
-- SwiftUI interface
-- XCFramework integration
-- Platform support (iOS, macOS, tvOS, visionOS)
-- Future expansion (Web, Android, Desktop)
+### [System](./system/)
+The application layer. Frontend and ML combined.
+
+- **[Frontend](./system/frontend/)** — Application Layer
+  - SwiftUI interface
+  - XCFramework integration
+  - Platform support (iOS, macOS, tvOS, visionOS)
+
+- **[ML](./system/ml/)** — Machine Learning
+  - Composition assistance
+  - Audio analysis
+  - Style modeling
 
 ---
 
@@ -72,44 +70,20 @@ The Swift application that brings everything together.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                       FRONTEND                               │
-│                    Application Layer                         │
-│              (SwiftUI, XCFramework, Platform UI)             │
+│                         SYSTEM                               │
+│              Frontend + ML (Application Layer)               │
 └─────────────────────────┬───────────────────────────────────┘
-                          │ integrates all domains
+                          │
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                         THEORY                               │
-│                    Schillinger System                        │
-│              (Form, Rhythm, Melody, Harmony)                 │
+│                          SONG                                │
+│              Theory + Songwriting (Composition)              │
 └─────────────────────────┬───────────────────────────────────┘
-                          │ provides foundation for
+                          │
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      SONGWRITING                             │
-│                    Creative Application                      │
-│              (Lyrics, Hooks, Structure, Emotion)             │
-└─────────────────────────┬───────────────────────────────────┘
-                          │ produces arrangements for
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                         MIXING                               │
-│                        ConsoleX                              │
-│              (Channels, Buses, Routing)                      │
-└─────────────────────────┬───────────────────────────────────┘
-                          │ routes to
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                          DSP                                 │
-│                    Sound Substrate                           │
-│              (Synths, Effects, Voice)                        │
-└─────────────────────────┬───────────────────────────────────┘
-                          │ assisted by
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                           AI                                 │
-│                    ML Components                             │
-│              (Analysis, Assistance, Agents)                  │
+│                          SOUND                               │
+│              DSP + Mixing (Audio Engine)                     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -126,14 +100,14 @@ This is a **System Atlas** — public architecture documentation for a private c
 
 ## Technology Stack
 
-| Domain | Technologies |
-|--------|-------------|
-| Frontend | Swift, SwiftUI, Combine, XCFramework |
-| Theory | Swift, Schillinger algorithms |
-| Songwriting | Swift, natural language processing |
-| Mixing | SwiftUI, Combine, AUv3 hosting |
-| DSP | Pure C++20, DDSP, JUCE (optional wrapper), real-time audio |
-| AI | Python, ML models, MCP agents |
+| Pillar | Layer | Technologies |
+|--------|-------|-------------|
+| Song | Theory | Swift, Schillinger algorithms |
+| Song | Songwriting | Swift |
+| Sound | DSP | Pure C++20, DDSP, real-time audio |
+| Sound | Mixing | SwiftUI, Combine, AUv3 hosting |
+| System | Frontend | Swift, SwiftUI, Combine, XCFramework |
+| System | ML | Python, ML models |
 
 ---
 
