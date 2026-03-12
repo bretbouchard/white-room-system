@@ -113,13 +113,23 @@ This is a **System Atlas** — public architecture documentation for a private c
 
 ## Platform Strategy
 
-**Built for Apple TV → Works everywhere.**
+Designed under the strictest constraints.
 
-Apple TV has no external synth or effect support. By targeting tvOS as our high water mark, we ensured White Room is self-contained and portable across all platforms:
+White Room was engineered to run on platforms that do not allow external audio plugins. This forced the system to contain its entire synthesis, effects, and composition engine internally.
 
-- **Apple Ecosystem**: iOS, macOS, tvOS, visionOS (AUv3)
-- **Desktop**: Windows, Linux (VST3, CLAP, LV2)
-- **Mobile**: iOS, iPadOS (AUv3, Standalone)
+That decision produced a portable architecture where every instrument and effect is part of the core engine rather than an external dependency.
+
+The result is a system that runs consistently across:
+
+**Apple platforms:** iOS, macOS, tvOS, visionOS
+**Desktop platforms:** Windows, Linux
+**Mobile platforms:** iOS, iPadOS
+
+**Plugin formats supported:**
+
+AUv3 • VST3 • CLAP • LV2
+
+By removing external dependencies, White Room ensures consistent sound, deterministic playback, and seamless cross-platform portability.
 
 ---
 
