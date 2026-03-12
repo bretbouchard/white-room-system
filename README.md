@@ -68,23 +68,25 @@ The application layer. Frontend and ML combined.
 
 ## Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                         SYSTEM                               │
-│              Frontend + ML (Application Layer)               │
-└─────────────────────────┬───────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                          SONG                                │
-│              Theory + Songwriting (Composition)              │
-└─────────────────────────┬───────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                          SOUND                               │
-│              DSP + Mixing (Audio Engine)                     │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph SYSTEM["SYSTEM"]
+        Frontend["Frontend<br/>SwiftUI"]
+        ML["ML<br/>Python"]
+    end
+
+    subgraph SONG["SONG"]
+        Theory["Theory<br/>Schillinger"]
+        Songwriting["Songwriting<br/>Creative"]
+    end
+
+    subgraph SOUND["SOUND"]
+        DSP["DSP<br/>C++20"]
+        Mixing["Mixing<br/>ConsoleX"]
+    end
+
+    SYSTEM --> SONG
+    SONG --> SOUND
 ```
 
 ---
