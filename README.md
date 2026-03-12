@@ -69,7 +69,7 @@ The application layer. Frontend and ML combined.
 ## Architecture Overview
 
 ```mermaid
-graph TB
+graph LR
     subgraph SYSTEM["SYSTEM"]
         Frontend["Frontend<br/>SwiftUI"]
         ML["ML<br/>Python"]
