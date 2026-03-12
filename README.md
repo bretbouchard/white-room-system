@@ -33,18 +33,16 @@ Your composition. Theory and craft combined.
 
 - **[Songwriting](./song/songwriting/)** — Creative Application
   - Song structure and arrangement
+  - Synths, Samplers, Orchestral, Keys, Drums
   - Hook construction
   - Emotional arc design
-  - Instrument categories (Synths, Samplers, Orchestral, Keys, Drums)
 
 ### [Sound](./sound/)
 Your instruments and mix. DSP and routing combined.
 
 - **[DSP](./sound/dsp/)** — Sound Substrate
   - DSP-first architecture (no framework dependencies)
-  - 10 synthesizers: NexSynth, Kane, Aether, LocalGal, Growl, Breath, Choral, CDC4046, MajorModulator, VoiceSynth
-  - 10 engines: FM, Wavetable, Additive, Granular, Spectral, Physical, Chaos, PLL, Modulation, DDSP+ML
-  - Samplers, orchestral, keys, drums with DDSP enhancement
+  - 27 instruments across 5 categories, powered by 10+ synthesis engines
 
 - **[Mixing](./sound/mixing/)** — ConsoleX
   - Mixer architecture
