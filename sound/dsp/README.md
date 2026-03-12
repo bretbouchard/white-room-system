@@ -464,7 +464,7 @@ currentValue = currentValue + (targetValue - currentValue) × smoothCoeff
 
 ## Instrument Canon
 
-### Synthesizers (16)
+### Synthesizers (10)
 
 | Instrument | Engine | Description |
 |------------|--------|-------------|
@@ -472,18 +472,12 @@ currentValue = currentValue + (targetValue - currentValue) × smoothCoeff
 | **Kane** | Wavetable/VA | Virtual analog with wavetables |
 | **Aether** | Additive + Granular | Ambient/textural soundscapes |
 | **LocalGal** | Hybrid | Local Galactic multi-engine |
-| **String** | Additive | String machine emulation |
-| **Breath** | Physical model | Breath-controlled synthesis |
-| **BreathLead** | Physical model | Expressive breath lead |
 | **Growl** | Chaos + Additive | Aggressive, evolving textures |
+| **Breath** | Physical model | Breath-controlled synthesis |
 | **Choral** | Spectral | Choir/vocal textures |
-| **ChoirV2** | Spectral | Enhanced choir ensemble |
-| **Motion** | Granular | Evolving motion textures |
-| **Nature** | Sample + Granular | Environmental soundscapes |
-| **Giants** | Additive | Massive, epic sounds |
-| **MajorModulator** | Modulation | Dedicated modulation synth |
 | **CDC4046** | PLL | PLL-based synthesis (4046 chip emulation) |
-| **VoiceSynth** | DDSP + ML | **AI Voice Synthesis** (see below) |
+| **MajorModulator** | Modulation | Dedicated modulation synth |
+| **VoiceSynth** | DDSP + ML | AI Voice Synthesis |
 
 ### AI Voice Synthesis — VoiceSynth
 
@@ -539,36 +533,27 @@ All orchestral instruments use **open source samples + DDSP**:
 | **Rhodes** | Physical model | Electric piano emulation |
 | **Rhodes3D** | Physical model + Spatial | Spatial Rhodes with 3D imaging |
 
-### Drums (4)
+### Drums
 
 | Instrument | Technology | Description |
 |------------|------------|-------------|
 | **DrumMachine** | Synthesis | Electronic drum synthesis |
-| **DrumHybrid** | Samples + Synthesis | Hybrid acoustic/electronic |
-| **DrumSamples** | Samples | Acoustic drum samples |
-| **Drums** | Samples | General drum kit |
 
 ---
 
-## Shared DSP Backend
+## DSP Engines
 
-Many instruments share the same underlying DSP engines:
+The10 synthesizers are built on these core engines:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    PURE DSP LAYER                             │
-│                   (No JUCE Dependencies)                      │
-│                                                              │
-│   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
-│   │ KanePure │  │ Additive │  │ Granular │  │ Spectral │   │
-│   │   DSP    │  │  Engine   │  │  Engine   │  │  Engine   │   │
-│   └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
-│         │              │              │              │          │
-│         └──────────────┴──────────────┴──────────────┘          │
-│                              │                                 │
-│   Instruments: Kane, Aether, LocalGal, Growl, Giants,            │
-│   Breath, Choral, Motion, String, VoiceSynth...                 │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Merged Instruments:** Several instruments were consolidated because they shared the same synth backend. This reduces code duplication and ensures consistent sound across the ecosystem.
+| Engine | Used By |
+|--------|---------|
+| **KanePure DSP** | Kane |
+| **Additive Engine** | Aether, Growl |
+| **Granular Engine** | Aether |
+| **Spectral Engine** | Choral |
+| **Chaos Engine** | Growl |
+| **Physical Model** | Breath |
+| **FM Engine** | NexSynth |
+| **PLL Engine** | CDC4046 |
+| **Modulation Engine** | MajorModulator |
+| **DDSP + ML** | VoiceSynth |
