@@ -30,7 +30,7 @@ Present when needed. Invisible when not.
 
 **Working prototype, not yet released.**
 
-White Room is built and running — synthesis engines, Schillinger composition, multi-agent intelligence, cross-platform audio.
+White Room is built and running — [synthesis engines](./sound/dsp/), [Schillinger composition](./song/theory/), [multi-agent intelligence](./system/intelligence/), [cross-platform audio](./sound/dsp/).
 
 **Current focus:** UI/UX Experience
 
@@ -44,9 +44,9 @@ White Room is built on three sections: **Song**, **Sound**, and **System**.
 Your composition. Theory and craft combined.
 
 - **[Theory](./song/theory/)** — Schillinger System
-  - Rhythm resultants and interference patterns
-  - Melodic contour and motivic development
-  - Harmonic progressions and voice leading
+  - [Rhythm resultants](./song/theory/) and interference patterns
+  - [Melodic contour](./song/theory/) and motivic development
+  - [Harmonic progressions](./song/theory/) and voice leading
   - Orchestration and form
 
 - **[Songwriting](./song/songwriting/)** — Creative Application
@@ -59,33 +59,33 @@ Your composition. Theory and craft combined.
 Your instruments and mix. DSP and routing combined.
 
 - **[DSP](./sound/dsp/)** — Sound Substrate
-  - DSP-first architecture (no framework dependencies)
-  - 27 instruments across 5 categories, powered by 10+ synthesis engines
-  - 15+ effects
+  - [DSP-first architecture](./sound/dsp/) (no framework dependencies)
+  - 27 [instruments](./sound/dsp/) across 5 categories, powered by 10+ synthesis engines
+  - 15+ [effects](./sound/dsp/)
 
-- **[Mixing](./sound/mixing/)** — ConsoleX Mixer Architecture
-  - Bus routing (aux, groups, master)
+- **[Mixing](./sound/mixing/)** — [ConsoleX](./sound/mixing/) Mixer Architecture
+  - [Bus routing](./sound/mixing/) (aux, groups, master)
   - Effect chains
-  - Channel strips
+  - [Channel strips](./sound/mixing/)
 
 ### [System](./system/)
 The application layer. Frontend, Intelligence, and ML combined.
 
 - **[Frontend](./system/frontend/)** — Application Layer
-  - SwiftUI interface
-  - XCFramework integration
+  - [SwiftUI](./system/frontend/) interface
+  - [XCFramework](./system/frontend/) integration
   - Platform support (iOS, macOS, tvOS, visionOS)
 
-- **[Intelligence](./system/intelligence/)** — BettaFish-MiroFish Layer
-  - Forum Engine: Multi-agent deliberation (6 specialist agents)
-  - Simulation Engine: Temporal state evolution
-  - Musical Actor Agents: Kick, Bass, Harmony, Lead, Texture
-  - Renderer/Realizer: Simulation to musical output
+- **[Intelligence](./system/intelligence/)** — [BettaFish-MiroFish](./system/intelligence/) Layer
+  - [Forum Engine](./system/intelligence/): Multi-agent deliberation (6 specialist agents)
+  - [Simulation Engine](./system/intelligence/): Temporal state evolution
+  - [Musical Actor Agents](./system/intelligence/): Kick, Bass, Harmony, Lead, Texture
+  - [Renderer/Realizer](./system/intelligence/): Simulation to musical output
 
 - **[ML](./system/ml/)** — Machine Learning
-  - Composition assistance
-  - Audio analysis
-  - Style modeling
+  - [Composition assistance](./system/ml/)
+  - [Audio analysis](./system/ml/)
+  - [Style modeling](./system/ml/)
 
 ---
 
@@ -116,7 +116,7 @@ flowchart LR
     SYSTEM --> SONG --> SOUND
 ```
 
-### Intelligence Layer (BettaFish-MiroFish)
+### [Intelligence Layer](./system/intelligence/) (BettaFish-MiroFish)
 
 The Intelligence Layer sits between user intent and musical output:
 
@@ -162,10 +162,10 @@ If you're evaluating me as a candidate, this repo demonstrates:
 | Skill | Evidence |
 |-------|----------|
 | **Systems Architecture** | 3-layer design (Song → Sound → System) with clean boundaries |
-| **Real-time Audio** | Pure C++20 DSP, lock-free processing, cross-platform |
-| **AI/Agent Systems** | Multi-agent deliberation, temporal simulation, explainable decisions |
+| **Real-time Audio** | Pure C++20 [DSP](./sound/dsp/), lock-free processing, cross-platform |
+| **AI/Agent Systems** | [Multi-agent deliberation](./system/intelligence/), temporal simulation, explainable decisions |
 | **Cross-Platform** | iOS, macOS, tvOS, visionOS, Windows, Linux, 4 plugin formats |
-| **Music Theory** | Full Schillinger System implementation |
+| **Music Theory** | Full [Schillinger System](./song/theory/) implementation |
 | **Documentation** | Comprehensive architecture docs, decision logs |
 
 The private codebase is available for review under NDA.
@@ -176,13 +176,13 @@ The private codebase is available for review under NDA.
 
 | Section | Layer | Technologies | Purpose |
 |---------|-------|--------------|---------|
-| Song | Theory | Swift, Schillinger algorithms | Mathematical composition |
-| Song | Songwriting | Swift | Creative application |
-| Sound | DSP | Pure C++20, DDSP, real-time audio | Synthesis engines |
-| Sound | Mixing | SwiftUI, Combine, AUv3 hosting | ConsoleX mixer |
-| System | Frontend | Swift, SwiftUI, Combine, XCFramework | Application layer |
-| System | Intelligence | TypeScript, Zod, Node.js, Vitest | Multi-agent composition |
-| System | ML | Python, ML models | Optional assistance |
+| [Song](./song/) | [Theory](./song/theory/) | Swift, Schillinger algorithms | Mathematical composition |
+| Song | [Songwriting](./song/songwriting/) | Swift | Creative application |
+| [Sound](./sound/) | [DSP](./sound/dsp/) | Pure C++20, DDSP, real-time audio | Synthesis engines |
+| Sound | [Mixing](./sound/mixing/) | SwiftUI, Combine, AUv3 hosting | ConsoleX mixer |
+| [System](./system/) | [Frontend](./system/frontend/) | Swift, SwiftUI, Combine, XCFramework | Application layer |
+| System | [Intelligence](./system/intelligence/) | TypeScript, Zod, Node.js, Vitest | Multi-agent composition |
+| System | [ML](./system/ml/) | Python, ML models | Optional assistance |
 
 ---
 
