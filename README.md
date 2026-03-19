@@ -131,7 +131,7 @@ Forum Engine (BettaFish): Multi-member deliberation → CompositionPlanIR
     ↓
 Simulation Engine (MiroFish): Temporal state evolution → SimulationTimeline
     ↓
-Ensemble Members (5): Bass | Harmony | Lead | Counterline | Texture
+Ensemble Members (9): Bass | Harmony | Lead | Counterline | Texture | ...
     ↓
 Renderer/Realizer: Simulation → PatternIR/SongIR
     ↓

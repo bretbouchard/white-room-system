@@ -54,10 +54,11 @@ User Intent
                   │ SimulationTimeline
                   ▼
 ┌─────────────────────────────────────┐
-│        Ensemble Members (8)         │
+│        Ensemble Members (9)         │
 │  Bass | HarmonyBed | Lead           │
 │  Counterline | Texture              │
-│  Listener | EnergyCtrl | SectionGate│
+│  Kick | Listener | EnergyCtrl        │
+│  SectionGate                        │
 └─────────────────┬───────────────────┘
                   │
                   │ EnsembleAction[]
@@ -121,12 +122,13 @@ User Intent
 
 **Output:** `SimulationTimeline` — Bar-by-bar event sequence
 
-### Ensemble Members (8)
+### Ensemble Members (9)
 
 **Musical Ensemble:**
 
 | Member | Role | Triggers |
 |--------|------|----------|
+| **Kick** | Beat placement | Downbeats, groove |
 | **Bass** | Low-end foundation | Root motion, rhythm |
 | **HarmonyBed** | Chord voicing, pad | Harmonic changes |
 | **Lead** | Melodic content | Motif development |
