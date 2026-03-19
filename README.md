@@ -22,7 +22,9 @@ Present when needed. Invisible when not.
 
 **Working prototype, not yet released.**
 
-White Room is built and running — synthesis engines, Schillinger composition, multi-agent intelligence, cross-platform audio. Current focus: UI/UX polish.
+White Room is built and running — synthesis engines, Schillinger composition, multi-agent intelligence, cross-platform audio.
+
+**Current focus:** UI/UX Experience
 
 ---
 
