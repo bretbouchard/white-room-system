@@ -14,15 +14,15 @@ White Room is that room — rebuilt for today.
 A canvas with depth. Instruments, effects, and theory surrounding you.
 Present when needed. Invisible when not.
 
-*In the white room with black curtains, near the station…*
+<div align="center">*In the white room with black curtains, near the station…*</div>
 
 ---
 
 ## Project Status
 
-**Working prototype. Not yet released.**
+**Working prototype, not yet released.**
 
-White Room is built and running — synthesis engines, Schillinger composition, multi-agent intelligence, cross-platform audio. The backend is solid. Current focus: UI/UX polish.
+White Room is built and running — synthesis engines, Schillinger composition, multi-agent intelligence, cross-platform audio. Current focus: UI/UX polish.
 
 ---
 
