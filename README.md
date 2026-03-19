@@ -18,6 +18,42 @@ Present when needed. Invisible when not.
 
 ---
 
+## Project Status
+
+**3+ years in development. Working prototype. Not yet released.**
+
+This is not a plan or a proposal — White Room is built and running. The audio engine produces sound. The Schillinger algorithms generate music. The multi-agent intelligence layer deliberates and composes. The DSP pipeline processes in real-time.
+
+**Current state:**
+- ✅ Core synthesis engines (10+ types) — working
+- ✅ Schillinger composition system — working
+- ✅ Multi-agent intelligence layer (BettaFish-MiroFish) — working
+- ✅ Cross-platform audio pipeline — working
+- ⚠️ UX/UI — functional but needs polish
+- ⚠️ Onboarding flow — needs work
+- ⚠️ Production hardening — in progress
+
+**Why no screenshots?**
+
+The product works. The experience isn't ready. If you showed me your app's backend architecture, I'd be impressed by your engineering. If you showed me the same app with broken navigation and placeholder text, I'd question the whole thing.
+
+Same code. Different impression.
+
+White Room is that first thing — the architecture, the systems, the engineering decisions. The part that takes years to get right. The UI polish comes later, and it's not there yet.
+
+**What this repo demonstrates:**
+
+For potential employers and collaborators, this System Atlas shows:
+- Complex system architecture across 3 integrated layers
+- Real-time audio engineering in pure C++20
+- Multi-agent AI systems with deliberation and simulation
+- Cross-platform strategy (Apple ecosystem + desktop + plugin formats)
+- Schillinger System implementation — one of the few in existence
+
+The code is real. The systems work. The product is an ugly baby.
+
+---
+
 ## Three Sections
 
 White Room is built on three sections: **Song**, **Sound**, and **System**.
@@ -128,6 +164,29 @@ This is a **System Atlas** — public architecture documentation for a private c
 
 - **What's here**: Architecture, design decisions, patterns, technology choices
 - **What's not here**: Source code, algorithms, presets, implementation details
+
+### Why This Exists
+
+I'm Bret Bouchard. I've been building White Room for 3+ years as a solo developer. This System Atlas demonstrates the depth and complexity of the project for:
+
+- **Hiring managers** — See the engineering behind the product
+- **Potential collaborators** — Understand the architecture before conversations
+- **Future me** — Document decisions while I still remember why I made them
+
+### What This Shows
+
+If you're evaluating me as a candidate, this repo demonstrates:
+
+| Skill | Evidence |
+|-------|----------|
+| **Systems Architecture** | 3-layer design (Song → Sound → System) with clean boundaries |
+| **Real-time Audio** | Pure C++20 DSP, lock-free processing, cross-platform |
+| **AI/Agent Systems** | Multi-agent deliberation, temporal simulation, explainable decisions |
+| **Cross-Platform** | iOS, macOS, tvOS, visionOS, Windows, Linux, 4 plugin formats |
+| **Music Theory** | Full Schillinger System implementation |
+| **Documentation** | Comprehensive architecture docs, decision logs |
+
+The private codebase is available for review under NDA.
 
 ---
 
