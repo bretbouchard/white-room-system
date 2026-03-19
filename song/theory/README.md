@@ -195,4 +195,5 @@ House Band (performance)
 ## Further Reading
 
 - Schillinger, Joseph. *The Schillinger System of Musical Composition*. 1946.
+- Koechlin, Charles. *Précis des règles du contrepoint*. 1926.
 - Arden, Jeremy. *Schillinger System* (online resources)

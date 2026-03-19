@@ -44,9 +44,9 @@ White Room is built on three sections: **Song**, **Sound**, and **System**.
 Your composition. Theory and craft combined.
 
 - **[Theory](./song/theory/)** — Schillinger System
-  - [Rhythm resultants](./song/theory/) and interference patterns
-  - [Melodic contour](./song/theory/) and motivic development
-  - [Harmonic progressions](./song/theory/) and voice leading
+  - Rhythm resultants and interference patterns
+  - Melodic contour and motivic development
+  - Harmonic progressions and voice leading
   - Orchestration and form
 
 - **[Songwriting](./song/songwriting/)** — Creative Application
@@ -59,33 +59,33 @@ Your composition. Theory and craft combined.
 Your instruments and mix. DSP and routing combined.
 
 - **[DSP](./sound/dsp/)** — Sound Substrate
-  - [DSP-first architecture](./sound/dsp/) (no framework dependencies)
-  - 27 [instruments](./sound/dsp/) across 5 categories, powered by 10+ synthesis engines
-  - 15+ [effects](./sound/dsp/)
+  - DSP-first architecture (no framework dependencies)
+  - 27 instruments across 5 categories, powered by 10+ synthesis engines
+  - 15+ effects
 
-- **[Mixing](./sound/mixing/)** — [ConsoleX](./sound/mixing/) Mixer Architecture
-  - [Bus routing](./sound/mixing/) (aux, groups, master)
+- **[Mixing](./sound/mixing/)** — ConsoleX Mixer Architecture
+  - Bus routing (aux, groups, master)
   - Effect chains
-  - [Channel strips](./sound/mixing/)
+  - Channel strips
 
 ### [System](./system/)
 The application layer. Frontend, Intelligence, and ML combined.
 
 - **[Frontend](./system/frontend/)** — Application Layer
-  - [SwiftUI](./system/frontend/) interface
-  - [XCFramework](./system/frontend/) integration
+  - SwiftUI interface
+  - XCFramework integration
   - Platform support (iOS, macOS, tvOS, visionOS)
 
-- **[Intelligence](./system/intelligence/)** — [BettaFish-MiroFish](./system/intelligence/) Layer
-  - [Forum Engine](./system/intelligence/): Multi-agent deliberation (6 specialist agents)
-  - [Simulation Engine](./system/intelligence/): Temporal state evolution
-  - [Musical Actor Agents](./system/intelligence/): Kick, Bass, Harmony, Lead, Texture
-  - [Renderer/Realizer](./system/intelligence/): Simulation to musical output
+- **[Intelligence](./system/intelligence/)** — BettaFish-MiroFish Layer
+  - Forum Engine: Multi-agent deliberation (6 specialist agents)
+  - Simulation Engine: Temporal state evolution
+  - Musical Actor Agents: Kick, Bass, Harmony, Lead, Texture
+  - Renderer/Realizer: Simulation to musical output
 
 - **[ML](./system/ml/)** — Machine Learning
-  - [Composition assistance](./system/ml/)
-  - [Audio analysis](./system/ml/)
-  - [Style modeling](./system/ml/)
+  - Composition assistance
+  - Audio analysis
+  - Style modeling
 
 ---
 
@@ -176,11 +176,11 @@ The private codebase is available for review under NDA.
 
 | Section | Layer | Technologies | Purpose |
 |---------|-------|--------------|---------|
-| [Song](./song/) | [Theory](./song/theory/) | Swift, Schillinger algorithms | Mathematical composition |
+| Song | [Theory](./song/theory/) | Swift, Schillinger algorithms | Mathematical composition |
 | Song | [Songwriting](./song/songwriting/) | Swift | Creative application |
-| [Sound](./sound/) | [DSP](./sound/dsp/) | Pure C++20, DDSP, real-time audio | Synthesis engines |
+| Sound | [DSP](./sound/dsp/) | Pure C++20, DDSP, real-time audio | Synthesis engines |
 | Sound | [Mixing](./sound/mixing/) | SwiftUI, Combine, AUv3 hosting | ConsoleX mixer |
-| [System](./system/) | [Frontend](./system/frontend/) | Swift, SwiftUI, Combine, XCFramework | Application layer |
+| System | [Frontend](./system/frontend/) | Swift, SwiftUI, Combine, XCFramework | Application layer |
 | System | [Intelligence](./system/intelligence/) | TypeScript, Zod, Node.js, Vitest | Multi-agent composition |
 | System | [ML](./system/ml/) | Python, ML models | Optional assistance |
 
@@ -196,9 +196,14 @@ That decision produced a portable architecture where every instrument and effect
 
 The result is a system that runs consistently across:
 
-**Apple platforms:** iOS, macOS, tvOS, visionOS
-**Desktop platforms:** Windows, Linux
-**Mobile platforms:** iOS, iPadOS
+**Apple platforms:**
+iOS, macOS, tvOS, visionOS
+
+**Desktop platforms:**
+Windows, Linux
+
+**Mobile platforms:**
+iOS, iPadOS
 
 **Plugin formats supported:**
 
