@@ -20,37 +20,9 @@ Present when needed. Invisible when not.
 
 ## Project Status
 
-**3+ years in development. Working prototype. Not yet released.**
+**Working prototype. Not yet released.**
 
-This is not a plan or a proposal — White Room is built and running. The audio engine produces sound. The Schillinger algorithms generate music. The multi-agent intelligence layer deliberates and composes. The DSP pipeline processes in real-time.
-
-**Current state:**
-- ✅ Core synthesis engines (10+ types) — working
-- ✅ Schillinger composition system — working
-- ✅ Multi-agent intelligence layer (BettaFish-MiroFish) — working
-- ✅ Cross-platform audio pipeline — working
-- ⚠️ UX/UI — functional but needs polish
-- ⚠️ Onboarding flow — needs work
-- ⚠️ Production hardening — in progress
-
-**Why no screenshots?**
-
-The product works. The experience isn't ready. If you showed me your app's backend architecture, I'd be impressed by your engineering. If you showed me the same app with broken navigation and placeholder text, I'd question the whole thing.
-
-Same code. Different impression.
-
-White Room is that first thing — the architecture, the systems, the engineering decisions. The part that takes years to get right. The UI polish comes later, and it's not there yet.
-
-**What this repo demonstrates:**
-
-For potential employers and collaborators, this System Atlas shows:
-- Complex system architecture across 3 integrated layers
-- Real-time audio engineering in pure C++20
-- Multi-agent AI systems with deliberation and simulation
-- Cross-platform strategy (Apple ecosystem + desktop + plugin formats)
-- Schillinger System implementation — one of the few in existence
-
-The code is real. The systems work. The product is an ugly baby.
+White Room is built and running — synthesis engines, Schillinger composition, multi-agent intelligence, cross-platform audio. The backend is solid. Current focus: UI/UX polish.
 
 ---
 
