@@ -9,7 +9,7 @@ The application layer. Frontend, Intelligence, and ML combined.
 The System pillar is everything that makes White Room an app:
 
 - **Frontend** — The Swift application
-- **Intelligence** — Multi-agent generative composition (BettaFish-MiroFish)
+- **Intelligence** — Multi-member generative composition (BettaFish-MiroFish)
 - **ML** — Machine learning assistance
 
 ---
@@ -26,11 +26,11 @@ The Swift application that brings everything together:
 
 ### [Intelligence](./intelligence/) — BettaFish-MiroFish Layer
 
-Multi-agent generative composition system:
+Multi-member generative composition system:
 
-- **Forum Engine** — Multi-agent deliberation (6 specialist agents)
+- **Forum Engine** — Multi-member deliberation (6 Musical Specialists)
 - **Simulation Engine** — Temporal state evolution
-- **Musical Actor Agents** — Kick, Bass, Harmony, Lead, Counterline, Texture
+- **Ensemble Members** — Bass, Harmony, Lead, Counterline, Texture
 - **Renderer/Realizer** — Simulation to musical output
 
 ### [ML](./ml/) — Machine Learning
@@ -50,7 +50,7 @@ FRONTEND          INTELLIGENCE              ML
 ────────          ───────────               ──
 User interface    Generative core           Optional assistance
 Swift, SwiftUI    TypeScript, Zod           Python, ML models
-Platform layer    Multi-agent system        Analysis models
+Platform layer    Multi-member system       Analysis models
 ```
 
 Frontend is the app. Intelligence is the generative core. ML is optional assistance.
@@ -68,8 +68,8 @@ Frontend is the app. Intelligence is the generative core. ML is optional assista
 ┌─────────────────────────▼───────────────────────────────────┐
 │                     INTELLIGENCE                             │
 │  ┌─────────────────────────────────────────────────────┐    │
-│  │ Intent → Agents → Forum Engine → Simulation Engine  │    │
-│  │         → Actor Agents → Renderer                   │    │
+│  │ Intent → Specialists → Forum Engine → Simulation    │    │
+│  │     → Ensemble Members → Renderer                  │    │
 │  └─────────────────────────────────────────────────────┘    │
 └─────────────────────────┬───────────────────────────────────┘
                           │

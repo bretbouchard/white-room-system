@@ -1,18 +1,18 @@
 # BettaFish-MiroFish Intelligence Layer
 
-Multi-agent generative composition system for White Room.
+Multi-member generative composition system for White Room.
 
 ---
 
 ## Overview
 
-The Intelligence Layer transforms user intent into musical output through a sophisticated multi-agent system:
+The Intelligence Layer transforms user intent into musical output through a sophisticated multi-member system:
 
 1. **Intent Interpretation** — Natural language or UI selection → structured intent
-2. **Specialist Agents** — Domain experts propose musical decisions
+2. **Musical Specialists** — Domain experts propose musical decisions
 3. **Forum Engine (BettaFish)** — Deliberation, conflict resolution, synthesis
 4. **Simulation Engine (MiroFish)** — Temporal state evolution
-5. **Musical Actor Agents** — Real-time musical decisions
+5. **Ensemble Members** — Real-time musical decisions
 6. **Renderer/Realizer** — Simulation output to playable music
 
 ---
@@ -29,11 +29,11 @@ User Intent
                   │
                   ▼
 ┌─────────────────────────────────────┐
-│         Specialist Agents (6)        │
-│  Structure | Harmony | Rhythm        │
-│  Motif | Emotion | Expression        │
+│       Musical Specialists (6)       │
+│  Structure | Harmony | Rhythm       │
+│  Motif | Emotion | Expression       │
 └─────────────────┬───────────────────┘
-                  │ AgentProposal[]
+                  │ SpecialistProposal[]
                   ▼
 ┌─────────────────────────────────────┐
 │      Forum Engine (BettaFish)       │
@@ -54,12 +54,13 @@ User Intent
                   │ SimulationTimeline
                   ▼
 ┌─────────────────────────────────────┐
-│      Musical Actor Agents (9)       │
-│  Kick | Bass | HarmonyBed | Lead    │
+│        Ensemble Members (8)         │
+│  Bass | HarmonyBed | Lead           │
 │  Counterline | Texture              │
 │  Listener | EnergyCtrl | SectionGate│
 └─────────────────┬───────────────────┘
-                  │ ActorAction[]
+                  │
+                  │ EnsembleAction[]
                   ▼
 ┌─────────────────────────────────────┐
 │        Renderer/Realizer            │
@@ -74,10 +75,10 @@ User Intent
 
 ## Components
 
-### Specialist Agents (6)
+### Musical Specialists (6)
 
-| Agent | Domain | Responsibilities |
-|--------|--------|------------------|
+| Specialist | Domain | Responsibilities |
+|------------|--------|------------------|
 | **Structure** | Form | Section layout, repetition, phrase length, tension curve |
 | **Harmony** | Harmony | Key, scale, chord movement, modulation |
 | **Rhythm** | Rhythm | Density, pulse, syncopation, emphasis |
@@ -87,10 +88,10 @@ User Intent
 
 ### Forum Engine (BettaFish)
 
-**Purpose:** Multi-agent deliberation and synthesis
+**Purpose:** Multi-member deliberation and synthesis
 
 **Process:**
-1. **Collection** — Execute all agents in parallel
+1. **Collection** — Execute all specialists in parallel
 2. **Conflict Detection** — Score overlaps between proposals
 3. **Synthesis** — Priority-weighted merge of proposals
 4. **Plan Generation** — Output unified CompositionPlanIR
@@ -120,33 +121,32 @@ User Intent
 
 **Output:** `SimulationTimeline` — Bar-by-bar event sequence
 
-### Musical Actor Agents (9)
+### Ensemble Members (8)
 
-**Musical Actors:**
+**Musical Ensemble:**
 
-| Actor | Role | Triggers |
-|-------|------|----------|
-| **Kick** | Beat placement | Downbeats, groove |
+| Member | Role | Triggers |
+|--------|------|----------|
 | **Bass** | Low-end foundation | Root motion, rhythm |
-| **Harmony Bed** | Chord voicing, pad | Harmonic changes |
+| **HarmonyBed** | Chord voicing, pad | Harmonic changes |
 | **Lead** | Melodic content | Motif development |
 | **Counterline** | Counter-melody | Complementary motion |
 | **Texture** | Atmospheric elements | Density changes |
 
-**Meta Actors:**
+**Meta Members:**
 
-| Actor | Role | Monitors |
-|-------|------|----------|
+| Member | Role | Monitors |
+|--------|------|----------|
 | **Listener** | Responds to density, surprise | WorldState |
-| **Energy Controller** | Manages energy curve | Energy trajectory |
-| **Section Gate** | Controls transitions | Section boundaries |
+| **EnergyCtrl** | Manages energy curve | Energy trajectory |
+| **SectionGate** | Controls transitions | Section boundaries |
 
 ### Renderer/Realizer
 
 **Purpose:** Convert simulation to musical representation
 
 **Components:**
-- **VoiceMapper** — Agent → instrument slot mapping with priority and voice stealing
+- **VoiceMapper** — Ensemble member → instrument slot mapping with priority and voice stealing
 - **MIDIRenderer** — Timeline → MIDI file
 - **AudioExporter** — MIDI → WAV/FLAC/MP3
 - **SheetMusicRenderer** — Timeline → MusicXML/PDF/LilyPond
@@ -161,8 +161,8 @@ All schemas use Zod for runtime validation with TypeScript type inference.
 ### Core Schemas
 
 ```typescript
-// Agent output format
-AgentProposalSchema
+// Ensemble member output format
+SpecialistProposalSchema
 
 // Forum Engine output
 CompositionPlanIRSchema
@@ -191,7 +191,7 @@ FeatureRegistrySchema
 ├── schemas/bettafish/     # Phase 33.1
 ├── forum-engine/          # Phase 33.2
 ├── simulation/            # Phase 33.3
-├── actors/                # Phase 33.4
+├── ensemble/              # Phase 33.4
 └── renderer/              # Phase 33.6
 ```
 
@@ -209,7 +209,7 @@ Users can observe and understand the intelligence layer:
 
 - **Timeline View** — Bar-by-bar state evolution
 - **Energy/Tension Overlay** — Visual curves on timeline
-- **Agent Contribution Panel** — Per-decision breakdown
+- **Ensemble Contribution Panel** — Per-decision breakdown
 - **Rationale Inspector** — "Why did this happen?" queries
 - **State Graph** — Visual state machine
 - **Traceability Interface** — Full provenance tracking
@@ -219,10 +219,10 @@ Users can observe and understand the intelligence layer:
 ## Design Principles
 
 1. **Determinism** — Same seed → identical output
-2. **Explainability** — Every decision traceable to agents
+2. **Explainability** — Every decision traceable to members
 3. **Testability** — 100% coverage requirement
 4. **Streaming** — Real-time UI updates via events
-5. **Extensibility** — New agents can be added easily
+5. **Extensibility** — New members can be added easily
 
 ---
 

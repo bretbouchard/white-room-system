@@ -77,9 +77,9 @@ The application layer. Frontend, Intelligence, and ML combined.
   - Platform support (iOS, macOS, tvOS, visionOS)
 
 - **[Intelligence](./system/intelligence/)** — BettaFish-MiroFish Layer
-  - Forum Engine: Multi-agent deliberation (6 specialist agents)
+  - Forum Engine: Multi-member deliberation (6 Musical Specialists)
   - Simulation Engine: Temporal state evolution
-  - Musical Actor Agents: Kick, Bass, Harmony, Lead, Texture
+  - Ensemble Members: Bass, Harmony, Lead, Counterline, Texture
   - Renderer/Realizer: Simulation to musical output
 
 - **[ML](./system/ml/)** — Machine Learning
@@ -125,13 +125,13 @@ User Intent
     ↓
 Intent Interpretation
     ↓
-Specialist Agents (6): Structure | Harmony | Rhythm | Motif | Emotion | Expression
+Musical Specialists (6): Structure | Harmony | Rhythm | Motif | Emotion | Expression
     ↓
-Forum Engine (BettaFish): Multi-agent deliberation → CompositionPlanIR
+Forum Engine (BettaFish): Multi-member deliberation → CompositionPlanIR
     ↓
 Simulation Engine (MiroFish): Temporal state evolution → SimulationTimeline
     ↓
-Musical Actor Agents (9): Kick | Bass | Harmony | Lead | Counterline | Texture
+Ensemble Members (5): Bass | Harmony | Lead | Counterline | Texture
     ↓
 Renderer/Realizer: Simulation → PatternIR/SongIR
     ↓
@@ -163,7 +163,7 @@ If you're evaluating me as a candidate, this repo demonstrates:
 |-------|----------|
 | **Systems Architecture** | 3-layer design (Song → Sound → System) with clean boundaries |
 | **Real-time Audio** | Pure C++20 [DSP](./sound/dsp/), lock-free processing, cross-platform |
-| **AI/Agent Systems** | [Multi-agent deliberation](./system/intelligence/), temporal simulation, explainable decisions |
+| **AI/Ensemble Systems** | [Multi-member deliberation](./system/intelligence/), temporal simulation, explainable decisions |
 | **Cross-Platform** | iOS, macOS, tvOS, visionOS, Windows, Linux, 4 plugin formats |
 | **Music Theory** | Full [Schillinger System](./song/theory/) implementation |
 | **Documentation** | Comprehensive architecture docs, decision logs |
@@ -181,7 +181,7 @@ The private codebase is available for review under NDA.
 | Sound | [DSP](./sound/dsp/) | Pure C++20, DDSP, real-time audio | Synthesis engines |
 | Sound | [Mixing](./sound/mixing/) | SwiftUI, Combine, AUv3 hosting | ConsoleX mixer |
 | System | [Frontend](./system/frontend/) | Swift, SwiftUI, Combine, XCFramework | Application layer |
-| System | [Intelligence](./system/intelligence/) | TypeScript, Zod, Node.js, Vitest | Multi-agent composition |
+| System | [Intelligence](./system/intelligence/) | TypeScript, Zod, Node.js, Vitest | Multi-member composition |
 | System | [ML](./system/ml/) | Python, ML models | Optional assistance |
 
 ---
