@@ -11,7 +11,7 @@ The frontend is the user-facing application that integrates:
 - **Songwriting** — Creative tools and workflows
 - **Mixing** — ConsoleX mixer interface
 - **DSP** — Sound Substrate via XCFramework
-- **AI** — Composition assistance
+- **ML** — Composition assistance
 
 ---
 
@@ -115,7 +115,7 @@ mixer.connect(engine.output, to: channelStrip)
                           │
 ┌─────────────────────────▼───────────────────────────────────┐
 │                    DOMAIN SERVICES                          │
-│        Theory │ Songwriting │ Mixing │ AI Agents            │
+│        Theory │ Songwriting │ Mixing │ ML                   │
 └─────────────────────────┬───────────────────────────────────┘
                           │
 ┌─────────────────────────▼───────────────────────────────────┐
@@ -147,7 +147,7 @@ XCFramework (DSP)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  [Theory] [Song] [Mix] [DSP] [AI]          ◀ ▶ ● ▶▶ ⏹     │
+│  [Theory] [Song] [Mix] [DSP] [ML]          ◀ ▶ ● ▶▶ ⏹     │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │                    MAIN CONTENT AREA                        │
@@ -166,7 +166,7 @@ XCFramework (DSP)
 | **Song** | Lyrics, structure, hooks, emotional arc |
 | **Mix** | ConsoleX mixer UI with channel strips |
 | **DSP** | Instrument selection, preset management |
-| **AI** | Composition assistance, analysis results |
+| **ML** | Composition assistance, analysis results |
 
 ---
 

@@ -163,7 +163,7 @@ If you're evaluating me as a candidate, this repo demonstrates:
 |-------|----------|
 | **Systems Architecture** | 3-layer design (Song → Sound → System) with clean boundaries |
 | **Real-time Audio** | Pure C++20 [DSP](./sound/dsp/), lock-free processing, cross-platform |
-| **AI/Ensemble Systems** | [Multi-member deliberation](./system/intelligence/), temporal simulation, explainable decisions |
+| **ML/Ensemble Systems** | [Multi-member deliberation](./system/intelligence/), temporal simulation, explainable decisions |
 | **Cross-Platform** | iOS, macOS, tvOS, visionOS, Windows, Linux, 4 plugin formats |
 | **Music Theory** | Full [Schillinger System](./song/theory/) implementation |
 | **Documentation** | Comprehensive architecture docs, decision logs |

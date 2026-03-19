@@ -1,4 +1,4 @@
-# AI — Machine Learning
+# ML — Machine Learning
 
 ML assistance for White Room.
 
@@ -6,16 +6,16 @@ ML assistance for White Room.
 
 ## What This Is
 
-The AI layer provides ML assistance for music composition:
+The ML layer provides assistance for music composition:
 
 - **Composition suggestions** — Ideas when you're stuck
 - **Audio analysis** — Understand existing audio
 - **Style modeling** — Learn from reference tracks
-- **Agent orchestration** — Coordinate multiple AI tasks
+- **Task orchestration** — Coordinate multiple ML tasks
 
 ---
 
-## Agent Architecture
+## ML Architecture
 
 ### Supervisor Pattern
 
@@ -265,7 +265,7 @@ User: "Make the melody more interesting"
 
 ### Context Management
 
-The AI maintains context about the current composition:
+The ML system maintains context about the current composition:
 
 ```json
 {
@@ -316,7 +316,7 @@ Agent Request
      │
      ▼
 ┌────────────────┐
-│ Try AI Solution │
+│ Try ML Solution │
 └───────┬────────┘
         │
         ▼
@@ -357,7 +357,7 @@ Agent Request
 
 ### Local Processing
 
-All AI inference runs locally on device:
+All ML inference runs locally on device:
 - No API calls to external services
 - No user data leaves the device
 - Models run on-device (CoreML on Apple)

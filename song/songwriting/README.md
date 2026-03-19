@@ -194,11 +194,11 @@ Texture (Choral)        ██████████████████�
 
 ---
 
-## AI Assistance
+## ML Assistance
 
-### Composition Agent Integration
+### Composition Integration
 
-The AI Composition Agent can:
+The ML Composition system can:
 
 | Task | Input | Output |
 |------|-------|--------|
@@ -206,12 +206,12 @@ The AI Composition Agent can:
 | Create hooks | Style reference | Melodic/rhythmic motifs |
 | Analyze arc | Song sections | Energy curve feedback |
 
-### Example AI Workflow
+### Example ML Workflow
 
 ```
 User: "Create a hook for the chorus"
 
-AI Composition Agent:
+ML Composition:
 1. Analyzes current song context (key, tempo, style)
 2. Generates 3 melodic options with different contours
 3. Suggests rhythmic patterns using Schillinger resultants
