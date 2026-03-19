@@ -14,7 +14,11 @@ White Room is that room — rebuilt for today.
 A canvas with depth. Instruments, effects, and theory surrounding you.
 Present when needed. Invisible when not.
 
-<div align="center">*In the white room with black curtains, near the station…*</div>
+<div align="center">
+*In the white room with black curtains, near the station…*
+
+<sub>1968 Cream & Pete Brown</sub>
+</div>
 
 ---
 
