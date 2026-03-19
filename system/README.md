@@ -1,6 +1,6 @@
 # System
 
-The application layer. Frontend and ML combined.
+The application layer. Frontend, Intelligence, and ML combined.
 
 ---
 
@@ -9,6 +9,7 @@ The application layer. Frontend and ML combined.
 The System pillar is everything that makes White Room an app:
 
 - **Frontend** — The Swift application
+- **Intelligence** — Multi-agent generative composition (BettaFish-MiroFish)
 - **ML** — Machine learning assistance
 
 ---
@@ -23,6 +24,15 @@ The Swift application that brings everything together:
 - XCFramework integration
 - Platform support (iOS, macOS, tvOS, visionOS)
 
+### [Intelligence](./intelligence/) — BettaFish-MiroFish Layer
+
+Multi-agent generative composition system:
+
+- **Forum Engine** — Multi-agent deliberation (6 specialist agents)
+- **Simulation Engine** — Temporal state evolution
+- **Musical Actor Agents** — Kick, Bass, Harmony, Lead, Counterline, Texture
+- **Renderer/Realizer** — Simulation to musical output
+
 ### [ML](./ml/) — Machine Learning
 
 ML assistance for composition:
@@ -36,11 +46,35 @@ ML assistance for composition:
 ## Relationship
 
 ```
-FRONTEND                        ML
-────────                        ──
-User interface          →       Intelligence layer
-Swift, SwiftUI          →       Python, ML models
-Platform integration    →       Optional assistance
+FRONTEND          INTELLIGENCE              ML
+────────          ───────────               ──
+User interface    Generative core           Optional assistance
+Swift, SwiftUI    TypeScript, Zod           Python, ML models
+Platform layer    Multi-agent system        Analysis models
 ```
 
-Frontend is the app. ML is optional assistance.
+Frontend is the app. Intelligence is the generative core. ML is optional assistance.
+
+---
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        FRONTEND                              │
+│  SwiftUI + Combine + AVFoundation + XCFramework             │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│                     INTELLIGENCE                             │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │ Intent → Agents → Forum Engine → Simulation Engine  │    │
+│  │         → Actor Agents → Renderer                   │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│                          ML                                  │
+│  Python models for optional composition assistance           │
+└─────────────────────────────────────────────────────────────┘
+```

@@ -51,12 +51,18 @@ Your instruments and mix. DSP and routing combined.
   - Channel strips
 
 ### [System](./system/)
-The application layer. Frontend and ML combined.
+The application layer. Frontend, Intelligence, and ML combined.
 
 - **[Frontend](./system/frontend/)** — Application Layer
   - SwiftUI interface
   - XCFramework integration
   - Platform support (iOS, macOS, tvOS, visionOS)
+
+- **[Intelligence](./system/intelligence/)** — BettaFish-MiroFish Layer
+  - Forum Engine: Multi-agent deliberation (6 specialist agents)
+  - Simulation Engine: Temporal state evolution
+  - Musical Actor Agents: Kick, Bass, Harmony, Lead, Texture
+  - Renderer/Realizer: Simulation to musical output
 
 - **[ML](./system/ml/)** — Machine Learning
   - Composition assistance
@@ -71,8 +77,10 @@ The application layer. Frontend and ML combined.
 flowchart LR
     subgraph SYSTEM["SYSTEM"]
         Frontend["Frontend<br/>SwiftUI"]
+        Intelligence["Intelligence<br/>BettaFish-MiroFish"]
         ML["ML<br/>Python"]
-        Frontend ~~~ ML
+        Frontend --> Intelligence
+        Intelligence ~~~ ML
     end
 
     subgraph SONG["SONG"]
@@ -88,6 +96,28 @@ flowchart LR
     end
 
     SYSTEM --> SONG --> SOUND
+```
+
+### Intelligence Layer (BettaFish-MiroFish)
+
+The Intelligence Layer sits between user intent and musical output:
+
+```
+User Intent
+    ↓
+Intent Interpretation
+    ↓
+Specialist Agents (6): Structure | Harmony | Rhythm | Motif | Emotion | Expression
+    ↓
+Forum Engine (BettaFish): Multi-agent deliberation → CompositionPlanIR
+    ↓
+Simulation Engine (MiroFish): Temporal state evolution → SimulationTimeline
+    ↓
+Musical Actor Agents (9): Kick | Bass | Harmony | Lead | Counterline | Texture
+    ↓
+Renderer/Realizer: Simulation → PatternIR/SongIR
+    ↓
+Audio Output
 ```
 
 ---
@@ -110,6 +140,7 @@ This is a **System Atlas** — public architecture documentation for a private c
 | Sound | DSP | Pure C++20, DDSP, real-time audio | Synthesis engines |
 | Sound | Mixing | SwiftUI, Combine, AUv3 hosting | ConsoleX mixer |
 | System | Frontend | Swift, SwiftUI, Combine, XCFramework | Application layer |
+| System | Intelligence | TypeScript, Zod, Node.js, Vitest | Multi-agent composition |
 | System | ML | Python, ML models | Optional assistance |
 
 ---
