@@ -206,8 +206,6 @@ I'm Bret Bouchard. I've been building White Room for 3+ years as a solo develope
 - **Potential collaborators** — Understand the architecture before conversations
 - **Future me** — Document decisions while I still remember why I made them
 
-The private codebase is available for review under NDA.
-
 ---
 
 ## Technology Stack
