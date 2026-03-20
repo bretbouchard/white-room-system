@@ -198,15 +198,14 @@ The result is a system that runs consistently across:
 
 **Apple platforms:**
 iOS, macOS, tvOS, visionOS
-
+</br>
 **Desktop platforms:**
 Windows, Linux
-
+</br>
 **Mobile platforms:**
 iOS, iPadOS
-
+</br>
 **Plugin formats supported:**
-
 AUv3 • VST3 • CLAP • LV2
 
 By removing external dependencies, White Room ensures consistent sound, deterministic playback, and seamless cross-platform portability.
