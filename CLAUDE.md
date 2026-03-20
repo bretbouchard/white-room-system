@@ -12,23 +12,48 @@ This is a **System Atlas** — public architecture documentation for White Room,
 
 White Room is organized into three pillars: **Song**, **Sound**, and **System**.
 
+### Conceptual Flow
+
 ```
-SYSTEM(Frontend + ML)
+SYSTEM (Packaging)
     │
     ▼
-SONG (Theory + Songwriting)
+SONG (Composition)
     │
     ▼
-SOUND (DSP + Mixing)
+SOUND (Audio)
+```
+
+### Actual Data Flow
+
+```
+Swift Frontend
+    │
+    ├── FFI ──► BettaFish-MiroFish (TS/Python)
+    │                  │
+    │                  ├── Forum Engine (TypeScript)
+    │                  ├── Simulation Engine (TypeScript)
+    │                  ├── Counterpoint Engine (Python/Koechlin)
+    │                  │
+    │                  └── Triggers ──► DSP
+    │
+    └── FFI ──► DSP (C++20) ◄── Direct access
 ```
 
 ### Song (`/song/`)
-Your composition. Theory and craft combined.
+Your composition. Theory, engine, and craft combined.
 
 - **Theory** (`/song/theory/`) — Schillinger System
   - Rhythm resultants, interference patterns
   - Melodic contour, motivic development
   - Harmony, voice leading, form
+
+- **Engine** (`/song/engine/`) — BettaFish-MiroFish Layer
+  - Forum Engine: Multi-member deliberation (6 Musical Specialists) — TypeScript
+  - Simulation Engine: Temporal state evolution — TypeScript
+  - Counterpoint Engine: Koechlin voice-leading, species rules — Python
+  - Ensemble Members: Bass, Harmony, Lead, Counterline, Texture
+  - Renderer/Realizer: Simulation to musical output
 
 - **Songwriting** (`/song/songwriting/`) — Creative Application
   - Song structure, arrangement
@@ -50,14 +75,14 @@ Your instruments and mix. DSP and routing combined.
   - Channel strips, effect chains
 
 ### System (`/system/`)
-The application layer. Frontend and ML combined.
+The packaging layer. Frontend and optional ML combined.
 
 - **Frontend** (`/system/frontend/`) — Application Layer
   - SwiftUI interface
   - XCFramework integration
   - Platform support (iOS, macOS, tvOS, visionOS)
 
-- **ML** (`/system/ml/`) — Machine Learning
+- **ML** (`/system/ml/`) — Machine Learning (Optional)
   - Composition assistance
   - Audio analysis
   - Style modeling
@@ -65,6 +90,31 @@ The application layer. Frontend and ML combined.
 ---
 
 ## Key Architectural Decisions
+
+### FFI Bridge Architecture
+
+Swift Frontend connects to both the composition engine and DSP via FFI:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  SWIFT FRONTEND                                             │
+│  └── SwiftUI, XCFramework, Platform Layer                   │
+└─────────────────────────────────────────────────────────────┘
+        │                              │
+        │ FFI Bridge                   │ FFI Bridge
+        ▼                              ▼
+┌───────────────────────┐    ┌─────────────────────────────────┐
+│  BETTAFISH-MIROFISH   │    │  DSP (Sound Substrate)          │
+│  TypeScript + Python  │    │  C++20                          │
+│  └── Triggers ────────┼───►│  └── Synthesis + Effects        │
+└───────────────────────┘    └─────────────────────────────────┘
+```
+
+**Key Points:**
+- Swift can call BettaFish directly via FFI for composition
+- Swift can call DSP directly via FFI for real-time control
+- BettaFish triggers DSP when composition produces audio events
+- Counterpoint (Python) is called by the Forum Engine for voice-leading
 
 ### DSP-First Architecture
 The audio engine is abstracted from platform APIs:
@@ -107,11 +157,13 @@ SamSampler (DDSP+Samples), Orchestral (12 winds/brass/perc), Keys (Piano, Rhodes
 | Pillar | Layer | Technologies |
 |--------|-------|-------------|
 | Song | Theory | Swift, Schillinger algorithms |
+| Song | Engine (Forum/Sim) | TypeScript, Zod, Vitest |
+| Song | Engine (Counterpoint) | Python, Koechlin system |
 | Song | Songwriting | Swift |
 | Sound | DSP | Pure C++20, DDSP, real-time audio |
 | Sound | Mixing | SwiftUI, Combine, AUv3 hosting |
 | System | Frontend | Swift, SwiftUI, Combine, XCFramework |
-| System | ML | Python, ML models |
+| System | ML | Python, ML models (optional) |
 
 ---
 

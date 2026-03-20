@@ -30,7 +30,7 @@ Present when needed. Invisible when not.
 
 **Working prototype, not yet released.**
 
-White Room is built and running — [synthesis engines](./sound/dsp/), [Schillinger composition](./song/theory/), [multi-agent intelligence](./system/intelligence/), [cross-platform audio](./sound/dsp/).
+White Room is built and running — [synthesis engines](./sound/dsp/), [Schillinger composition](./song/theory/), [composition engine](./song/engine/), [cross-platform audio](./sound/dsp/).
 
 **Current focus:** UI/UX Experience
 
@@ -41,13 +41,19 @@ White Room is built and running — [synthesis engines](./sound/dsp/), [Schillin
 White Room is built on three sections: **Song**, **Sound**, and **System**.
 
 ### [Song](./song/)
-Your composition. Theory and craft combined.
+Your composition. Theory, engine, and craft combined.
 
 - **[Theory](./song/theory/)** — Schillinger System
   - Rhythm resultants and interference patterns
   - Melodic contour and motivic development
   - Harmonic progressions and voice leading
   - Orchestration and form
+
+- **[Composition Engine](./song/engine/)** — BettaFish-MiroFish Layer
+  - Forum Engine: Multi-member deliberation (6 Musical Specialists)
+  - Simulation Engine: Temporal state evolution
+  - Ensemble Members: Bass, Harmony, Lead, Counterline, Texture
+  - Renderer/Realizer: Simulation to musical output
 
 - **[Songwriting](./song/songwriting/)** — Creative Application
   - Song structure and arrangement
@@ -69,20 +75,14 @@ Your instruments and mix. DSP and routing combined.
   - Channel strips
 
 ### [System](./system/)
-The application layer. Frontend, Intelligence, and ML combined.
+The packaging layer. Frontend and optional ML combined.
 
 - **[Frontend](./system/frontend/)** — Application Layer
   - SwiftUI interface
   - XCFramework integration
   - Platform support (iOS, macOS, tvOS, visionOS)
 
-- **[Intelligence](./system/intelligence/)** — BettaFish-MiroFish Layer
-  - Forum Engine: Multi-member deliberation (6 Musical Specialists)
-  - Simulation Engine: Temporal state evolution
-  - Ensemble Members: Bass, Harmony, Lead, Counterline, Texture
-  - Renderer/Realizer: Simulation to musical output
-
-- **[ML](./system/ml/)** — Machine Learning
+- **[ML](./system/ml/)** — Machine Learning (Optional)
   - Composition assistance
   - Audio analysis
   - Style modeling
@@ -91,34 +91,77 @@ The application layer. Frontend, Intelligence, and ML combined.
 
 ## Architecture Overview
 
-```mermaid
-flowchart LR
-    subgraph SYSTEM["SYSTEM"]
-        Frontend["Frontend<br/>SwiftUI"]
-        Intelligence["Intelligence<br/>BettaFish-MiroFish"]
-        ML["ML<br/>Python"]
-        Frontend --> Intelligence
-        Intelligence ~~~ ML
-    end
+### Three Sections (Conceptual)
 
-    subgraph SONG["SONG"]
-        Theory["Theory<br/>Schillinger"]
-        Songwriting["Songwriting<br/>Creative"]
-        Theory ~~~ Songwriting
-    end
-
-    subgraph SOUND["SOUND"]
-        DSP["DSP<br/>C++20"]
-        Mixing["Mixing<br/>ConsoleX"]
-        DSP ~~~ Mixing
-    end
-
-    SYSTEM --> SONG --> SOUND
+```
+SYSTEM (Packaging)
+    │
+    ▼
+SONG (Composition)
+    │
+    ▼
+SOUND (Audio)
 ```
 
-### [Intelligence Layer](./system/intelligence/) (BettaFish-MiroFish)
+### Actual Data Flow
 
-The Intelligence Layer sits between user intent and musical output:
+```
+┌─────────────────────────────────────────────────────────────┐
+│  SWIFT FRONTEND (Application Layer)                         │
+│  └── SwiftUI interface, XCFramework integration             │
+└─────────────────────────────────────────────────────────────┘
+        │                           │
+        │ FFI                       │ FFI
+        ▼                           ▼
+┌───────────────────────┐   ┌─────────────────────────────────┐
+│  BETTAFISH-MIROFISH   │   │  DSP (Sound Substrate)          │
+│  ┌─────────────────┐  │   │  ┌─────────────────────────────┐│
+│  │ Forum Engine    │  │   │  │ Synthesis Engines (C++20)   ││
+│  │ (TypeScript)    │  │   │  │ - FM, Wavetable, Additive   ││
+│  └─────────────────┘  │   │  │ - Granular, Physical Model  ││
+│  ┌─────────────────┐  │   │  │ - Spectral, DDSP, Chaos     ││
+│  │ Simulation      │──┼──►│  └─────────────────────────────┘│
+│  │ (TypeScript)    │  │   │  ┌─────────────────────────────┐│
+│  └─────────────────┘  │   │  │ Effects (15+)               ││
+│  ┌─────────────────┐  │   │  │ - Reverb, Delay, Chorus     ││
+│  │ Counterpoint    │  │   │  │ - Distortion, EQ, Dynamics  ││
+│  │ (Python)        │  │   │  └─────────────────────────────┘│
+│  └─────────────────┘  │   └─────────────────────────────────┘
+└───────────────────────┘
+```
+
+**Key Connections:**
+- **Swift ↔ BettaFish**: FFI bridge for composition SDK calls
+- **Swift ↔ DSP**: Direct FFI bridge for real-time audio control
+- **BettaFish → DSP**: Composition engine triggers synthesis
+
+```mermaid
+flowchart TB
+    subgraph SYSTEM["SYSTEM (Packaging)"]
+        Swift["Swift Frontend<br/>SwiftUI"]
+    end
+
+    subgraph SONG["SONG (Composition)"]
+        direction TB
+        Forum["Forum Engine<br/>TypeScript/Zod"]
+        Sim["Simulation Engine<br/>TypeScript"]
+        Counter["Counterpoint<br/>Python/Koechlin"]
+        Forum --> Sim
+        Counter --> Forum
+    end
+
+    subgraph SOUND["SOUND (Audio)"]
+        DSP["DSP<br/>C++20"]
+    end
+
+    Swift -->|"FFI Bridge"| Forum
+    Swift -->|"FFI Bridge"| DSP
+    Sim -->|"Triggers"| DSP
+```
+
+### [Composition Engine](./song/engine/) (BettaFish-MiroFish)
+
+The Composition Engine implements theory as executable code:
 
 ```
 User Intent
@@ -131,12 +174,20 @@ Forum Engine (BettaFish): Multi-member deliberation → CompositionPlanIR
     ↓
 Simulation Engine (MiroFish): Temporal state evolution → SimulationTimeline
     ↓
+Counterpoint Engine (Python): Koechlin voice-leading, species rules
+    ↓
 Ensemble Members (9): Bass | Harmony | Lead | Counterline | Texture | ...
     ↓
 Renderer/Realizer: Simulation → PatternIR/SongIR
     ↓
-Audio Output
+DSP: Audio synthesis triggered by composition
 ```
+
+**Technologies:**
+- **Forum Engine**: TypeScript + Zod schemas + Vitest tests
+- **Simulation Engine**: TypeScript with deterministic state evolution
+- **Counterpoint**: Python implementation of Koechlin's system
+- **FFI Bridge**: Swift ↔ TypeScript/Python via native bridges
 
 ---
 
@@ -149,24 +200,11 @@ This is a **System Atlas** — public architecture documentation for a private c
 
 ### Why This Exists
 
-I'm Bret Bouchard. I've been building White Room for 3+ years as a solo developer. This System Atlas demonstrates the depth and complexity of the project for:
+I'm Bret Bouchard. I've been building White Room for 3+ years as a solo developer. This System Atlas documents the architecture for:
 
 - **Hiring managers** — See the engineering behind the product
 - **Potential collaborators** — Understand the architecture before conversations
 - **Future me** — Document decisions while I still remember why I made them
-
-### What This Shows
-
-If you're evaluating me as a candidate, this repo demonstrates:
-
-| Skill | Evidence |
-|-------|----------|
-| **Systems Architecture** | 3-layer design (Song → Sound → System) with clean boundaries |
-| **Real-time Audio** | Pure C++20 [DSP](./sound/dsp/), lock-free processing, cross-platform |
-| **ML/Ensemble Systems** | [Multi-member deliberation](./system/intelligence/), temporal simulation, explainable decisions |
-| **Cross-Platform** | iOS, macOS, tvOS, visionOS, Windows, Linux, 4 plugin formats |
-| **Music Theory** | Full [Schillinger System](./song/theory/) implementation |
-| **Documentation** | Comprehensive architecture docs, decision logs |
 
 The private codebase is available for review under NDA.
 
@@ -177,11 +215,12 @@ The private codebase is available for review under NDA.
 | Section | Layer | Technologies | Purpose |
 |---------|-------|--------------|---------|
 | Song | [Theory](./song/theory/) | Swift, Schillinger algorithms | Mathematical composition |
+| Song | [Engine](./song/engine/) | TypeScript, Zod, Vitest | BettaFish-MiroFish SDK (Forum + Simulation) |
+| Song | [Counterpoint](./song/engine/) | Python, Koechlin system | Voice-leading, species counterpoint |
 | Song | [Songwriting](./song/songwriting/) | Swift | Creative application |
 | Sound | [DSP](./sound/dsp/) | Pure C++20, DDSP, real-time audio | Synthesis engines |
 | Sound | [Mixing](./sound/mixing/) | SwiftUI, Combine, AUv3 hosting | ConsoleX mixer |
 | System | [Frontend](./system/frontend/) | Swift, SwiftUI, Combine, XCFramework | Application layer |
-| System | [Intelligence](./system/intelligence/) | TypeScript, Zod, Node.js, Vitest | Multi-member composition |
 | System | [ML](./system/ml/) | Python, ML models | Optional assistance |
 
 ---
