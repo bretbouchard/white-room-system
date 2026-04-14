@@ -82,7 +82,7 @@ tvOS has no support for external synths or effects — no AudioUnit hosting, no 
 | **LV2** | Linux | ✅ Supported |
 | **Standalone** | All platforms | ✅ Development |
 
-For Apple platforms, Sound Substrate is distributed as **XCFramework**. See [Frontend](../frontend/) for integration details.
+For Apple platforms, Sound Substrate is distributed as **XCFramework**. See [Frontend](../../system/frontend/) for integration details.
 
 ---
 

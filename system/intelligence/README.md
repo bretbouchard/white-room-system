@@ -230,15 +230,12 @@ Users can observe and understand the intelligence layer:
 
 ## Related Documentation
 
-- [BettaFish-MiroFish Plan](../../../.planning/phases/33-bettaFish-miroFish/BETTAFISH-MIROFISH-PLAN.md)
-- [Phase 33.1: Foundation Schemas](../../../.planning/phases/33.1-foundation-schemas/)
-- [Phase 33.2: Forum Engine Core](../../../.planning/phases/33.2-forum-engine-core/)
-- [Phase 33.3: Simulation Engine Core](../../../.planning/phases/33.3-simulation-engine-core/)
-- [Phase 33.4: Musical Actor Agents](../../../.planning/phases/33.4-musical-actor-agents/)
-- [Phase 33.5: UI Introspection](../../../.planning/phases/33.5-ui-introspection/)
-- [Phase 33.6: Renderer/Realizer](../../../.planning/phases/33.6-renderer-realizer/)
+- [Composition Engine](../../song/engine/) — BettaFish-MiroFish layer (Song pillar)
+- [Theory](../../song/theory/) — Schillinger System mathematical foundation
+- [DSP](../../sound/dsp/) — Sound synthesis triggered by composition
+- [ML](../ml/) — Machine learning assistance
 
 ---
 
-*Phase 33 — BettaFish-MiroFish Intelligence Layer*
-*Status: In Development*
+*BettaFish-MiroFish Intelligence Layer*
+*Part of the System pillar*
