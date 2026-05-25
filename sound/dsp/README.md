@@ -13,6 +13,12 @@ Sound Substrate is the **audio engine** that powers White Room's instruments. It
 - **Modal** — Physical modeling resonance
 - **Spectral** — FFT-based manipulation
 - **Chaos** — Nonlinear dynamics
+- **FM** — Frequency modulation synthesis
+- **Wavetable/VA** — Virtual analog with wavetables
+- **Physical Model** — Breath/controller-driven synthesis
+- **DDSP** — Differentiable digital signal processing (neural + DSP)
+- **PLL** — Phase-locked loop synthesis
+- **Sample-based** — Multi-sample playback with DDSP enhancement
 
 ---
 
@@ -36,7 +42,7 @@ White Room is built on a **DSP-first** foundation, not tied to low-level framewo
 │   │Additive │ │Granular │ │ Modal   │ │Spectral │ ...      │
 │   └─────────┘ └─────────┘ └─────────┘ └─────────┘          │
 │                                                              │
-│   No JUCE dependencies | No platform-specific code          │
+│   Minimal JUCE deps  | No platform-specific code             │
 └─────────────────────────┬───────────────────────────────────┘
                           │
 ┌─────────────────────────▼───────────────────────────────────┐
@@ -360,36 +366,34 @@ Note      │      │            │           │                         │
 
 ---
 
-## Effect Processors
+## Effect Processors (28 Pedals)
 
-### Built-in Effects
+28 effect pedals run through the AudioGraph processing chain. Each pedal is a self-contained DSP module with configurable parameters.
 
-| Effect | Description |
-|--------|-------------|
-| **Filter** | LP/HP/BP/Notch, resonance, envelope |
-| **Drive** | Soft/hard clipping, waveshaping |
-| **Delay** | Tempo-sync, feedback, ping-pong |
-| **Reverb** | Algorithmic, room size, decay |
-| **Chorus** | Modulated delays, width |
-| **Phaser** | All-pass filters, stages |
-| **Compressor** | Threshold, ratio, attack, release |
+| Category | Pedals |
+|----------|--------|
+| **Time-based** | Reverb, Delay, Ping-pong Delay |
+| **Modulation** | Chorus, Flanger, Phaser, Tremolo |
+| **Dynamics** | Compressor, Gate, Limiter |
+| **Tonal** | Filter (LP/HP/BP/Notch), Parametric EQ |
+| **Distortion** | Drive, Saturation, Waveshaping |
+| **Utility** | Width, Pan, Gain |
 
 ### Effect Chain
 
+Effect chains are per-channel in the 16-channel mixer, with configurable ordering and wet/dry mix. All continuous parameters are de-zippered (configurable 10ms ramp default).
+
 ```
 Instrument Output
-       │
-       ▼
-┌──────────────┐
-│   Filter     │
-└──────┬───────┘
-       ▼
-┌──────────────┐
-│   Drive      │
-└──────┬───────┘
-       ▼
-┌──────────────┐
-│   Delay      │
+       |
+       v
+[Pedal 1: Filter]
+       |
+       v
+[Pedal 2: Drive]
+       |
+       v
+[Pedal 3: Delay]
 └──────┬───────┘
        ▼
 ┌──────────────┐
@@ -398,6 +402,10 @@ Instrument Output
        ▼
     Output
 ```
+
+### Sound Modelers
+
+In addition to the 28 DSP effect pedals, White Room includes a Sound Modeler system with 10 modeler types for neural amp simulation, impulse response convolution, analog console emulation, and more. See [Modelers](../modelers/) for full documentation.
 
 ---
 
@@ -464,7 +472,7 @@ currentValue = currentValue + (targetValue - currentValue) × smoothCoeff
 
 ## Instrument Canon
 
-### Synthesizers (10)
+### Synthesizers (16)
 
 | Instrument | Engine | Description |
 |------------|--------|-------------|
@@ -472,32 +480,57 @@ currentValue = currentValue + (targetValue - currentValue) × smoothCoeff
 | **Kane** | Wavetable/VA | Virtual analog with wavetables |
 | **Aether** | Additive + Granular | Ambient/textural soundscapes |
 | **LocalGal** | Hybrid | Local Galactic multi-engine |
-| **Growl** | Chaos + Additive | Aggressive, evolving textures |
+| **String** | Additive | String synthesis with harmonic control |
 | **Breath** | Physical model | Breath-controlled synthesis |
+| **BreathLead** | Physical model | Lead voice with breath articulation |
+| **Growl** | Chaos + Additive | Aggressive, evolving textures |
 | **Choral** | Spectral | Choir/vocal textures |
-| **CDC4046** | PLL | PLL-based synthesis (4046 chip emulation) |
+| **ChoirV2** | Spectral | Second-generation choir synthesis |
+| **Motion** | Granular | Granular with motion and movement |
+| **Nature** | Sample + Granular | Nature-inspired textural synthesis |
+| **Giants** | Additive | Large-scale additive pads and textures |
 | **MajorModulator** | Modulation | Dedicated modulation synth |
-| **VoiceSynth** | DDSP + ML | AI Voice Synthesis |
+| **CDC4046** | PLL | PLL-based synthesis (4046 chip emulation) |
+| **VoiceSynth** | DDSP + ML | AI Voice Synthesis with Core ML |
+
+VoiceSynth uses DDSP + Core ML for real-time neural voice synthesis. See the [AI Voice Synthesis](#ai-voice-synthesis--voicesynth) section below for the full pipeline and parameters.
 
 ### AI Voice Synthesis — VoiceSynth
 
-**Real-time text-to-speech synthesis with zero external dependencies.**
+**Real-time DDSP voice synthesis powered by Core ML.**
+
+The voice pipeline uses 5 bundled Core ML models for neural voice synthesis with real-time timbre control:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    VOICE SYNTH PIPELINE                       │
 │                                                              │
-│   Phase 1: Text → Phoneme (G2P Dictionary)                  │
-│            "HELLO" → ["HH", "EH", "L", "OW"]                 │
+│   Phase 1: Text -> Phoneme (G2P Dictionary)                 │
+│            "HELLO" -> ["HH", "EH", "L", "OW"]                │
 │                                                              │
-│   Phase 2: Phoneme → Formant (ML Model)                     │
-│            ["HH", "EH", "L", "OW"] → F1/F2/F3 frequencies    │
-│            100x faster than real-time target                 │
+│   Phase 2: Phoneme -> Formant (Core ML)                     │
+│            ["HH", "EH", "L", "OW"] -> F1/F2/F3 frequencies   │
 │                                                              │
-│   Phase 3: Formant → Audio (DDSP Oscillator)                │
-│            Formant frequencies → Additive synthesis output   │
+│   Phase 3: Formant -> Audio (DDSP Oscillator)               │
+│            Formant frequencies -> Additive synthesis output  │
+│                                                              │
+│   Core ML Models:                                            │
+│   +- ConditionEncoder.mlpackage                             │
+│   +- NSF.mlpackage (Neural Source Filter)                   │
+│   +- Vocoder.mlpackage                                      │
+│   +- SpeakerEncoder.mlpackage                               │
+│   +- PhonemeToFormant.mlpackage                             │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+**Features:**
+- Timbre XY pad for real-time voice timbre manipulation (breathy <-> resonant, dark <-> bright)
+- 6 dimension sliders for individual voice parameters
+- Voice presets (soprano, alto, tenor, bass, falsetto, whisper)
+- Three-tier rendering: real-time inference, offline render, cached inference
+- Overlap-add (OLA) engine with polyphase sinc resampling (16-tap, 64 phases)
+- Adaptive inference rate with thermal management (100Hz -> 50Hz on thermal pressure)
+- Multi-voice choir mode with individual voice controls and blend
 
 **Parameters:**
 | Parameter | Range | Description |
@@ -506,6 +539,8 @@ currentValue = currentValue + (targetValue - currentValue) × smoothCoeff
 | Pitch | 80-400 Hz | Fundamental frequency |
 | Volume | 0-100% | Output amplitude |
 | Text | string | Text to synthesize |
+| Timbre X/Y | 0-1, 0-1 | XY pad for timbre space |
+| Thermal State | normal/fair/serious/critical | Adaptive rate scheduling |
 
 **MIDI Controllable:** Note-on triggers synthesis with pitch, velocity.
 
@@ -533,27 +568,48 @@ All orchestral instruments use **open source samples + DDSP**:
 | **Rhodes** | Physical model | Electric piano emulation |
 | **Rhodes3D** | Physical model + Spatial | Spatial Rhodes with 3D imaging |
 
-### Drums
+### Drums (4 variants)
 
 | Instrument | Technology | Description |
 |------------|------------|-------------|
 | **DrumMachine** | Synthesis | Electronic drum synthesis |
+| **Drums** (4 variants) | Synthesis + Samples | Multiple drum kit configurations |
+
+---
+
+## Effect Pedals (28)
+
+All effect pedals run through the AudioGraph processing chain:
+
+| Category | Pedals |
+|----------|--------|
+| **Time-based** | Reverb, Delay, Ping-pong Delay |
+| **Modulation** | Chorus, Flanger, Phaser, Tremolo |
+| **Dynamics** | Compressor, Gate, Limiter |
+| **Tonal** | EQ, Filter (LP/HP/BP/Notch) |
+| **Distortion** | Drive, Saturation, Waveshaping |
+| **Utility** | Width, Pan, Gain |
+
+Effect chains are per-channel in the 16-channel mixer, with configurable ordering and wet/dry mix.
 
 ---
 
 ## DSP Engines
 
-The10 synthesizers are built on these core engines:
+The 16 synthesizers are built on these core engines:
 
 | Engine | Used By |
 |--------|---------|
 | **KanePure DSP** | Kane |
-| **Additive Engine** | Aether, Growl |
-| **Granular Engine** | Aether |
-| **Spectral Engine** | Choral |
+| **Additive Engine** | Aether, Growl, String, Giants |
+| **Granular Engine** | Aether, Motion, Nature |
+| **Spectral Engine** | Choral, ChoirV2 |
 | **Chaos Engine** | Growl |
-| **Physical Model** | Breath |
+| **Physical Model** | Breath, BreathLead |
 | **FM Engine** | NexSynth |
 | **PLL Engine** | CDC4046 |
 | **Modulation Engine** | MajorModulator |
-| **DDSP + ML** | VoiceSynth |
+| **Hybrid Engine** | LocalGal |
+| **DDSP + Core ML** | VoiceSynth |
+| **Sample + DDSP** | SamSampler, Orchestral, Keys, Drums |
+| **Modeler Engines** | Sound Modelers (NAM Core for AmpCapture, IR convolution, console emulation, etc.) |

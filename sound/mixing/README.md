@@ -6,10 +6,10 @@ The mixing and signal routing infrastructure for White Room.
 
 ## What ConsoleX Is
 
-ConsoleX is the mixer that brings together all audio sources in White Room:
-- **Instruments** from House Band
-- **Effects** for processing
-- **Audio tracks** for recording
+ConsoleX is the 16-channel mixer that brings together all audio sources in White Room:
+- **Instruments** from House Band (up to 32 voices per channel)
+- **28 effect pedals** for processing
+- **Console bus processing** via Airwindows Console
 - **Buses** for grouping and sends
 
 ---
@@ -17,67 +17,104 @@ ConsoleX is the mixer that brings together all audio sources in White Room:
 ## Architecture
 
 ```
-                        ┌─────────────────────────────────────────┐
-                        │              MASTER BUS                  │
-                        │            (Stereo Output)              │
-                        └────────────────▲────────────────────────┘
-                                         │
-        ┌────────────────────────────────┼────────────────────────────────┐
-        │                                │                                │
-   ┌────┴────┐                      ┌────┴────┐                      ┌────┴────┐
-   │  AUX 1  │                      │  GROUP  │                      │  AUX 2  │
-   │ (Reverb)│                      │   BUS   │                      │ (Delay) │
-   └────▲────┘                      └────▲────┘                      └────▲────┘
-        │                                │                                │
-   ┌────┴────┐                      ┌────┴────┐                      ┌────┴────┐
-   │ Reverb  │                      │ Drums   │                      │  Delay  │
-   │  Unit   │                      │  Group  │                      │  Unit   │
-   └─────────┘                      └─────────┘                      └─────────┘
-        ▲                                ▲                                ▲
-        │         ┌──────────────────────┼──────────────────────┐        │
-        │         │                      │                      │        │
-   ┌────┴────┐ ┌──┴────┐ ┌────────┐ ┌────┴────┐ ┌────────┐ ┌────┴────┐ ┌─┴────┐
-   │  Lead   │ │  Pad  │ │ Chords │ │  Drums  │ │  Bass  │ │ Texture │ │ FX   │
-   │ Channel │ │Channel│ │Channel │ │ Channel │ │Channel │ │ Channel │ │Channel│
-   └─────────┘ └───────┘ └────────┘ └─────────┘ └────────┘ └─────────┘ └──────┘
-        │         │         │          │         │          │         │
-        ▼         ▼         ▼          ▼         ▼          ▼         ▼
-   ┌─────────────────────────────────────────────────────────────────────────┐
-   │                           HOUSE BAND                                     │
-   │                    (Virtual Instrument Ensemble)                         │
-   └─────────────────────────────────────────────────────────────────────────┘
+                        +------------------------------------------+
+                        |              MASTER BUS                  |
+                        |  [SoundModelerChain] (optional insert)  |
+                        |  Console Bus (Airwindows Console)       |
+                        |  +- Limiter +- Stereo Width +- EQ       |
+                        +------------------+-----------------------+
+                                           |
+        +----------------+------------------+-------------------+
+        |                |                  |                   |
+   +----+----+      +----+----+       +----+----+         +----+----+
+   |  AUX 1  |      |  AUX 2  |       | GROUP 1 |        | GROUP N |
+   | (Reverb)|      | (Delay) |       | (Drums) |        |         |
+   +----+----+      +----+----+       +----+----+         +---------+
+        |                |                  |
+   +----+----+      +----+----+       +----+----+
+   | Reverb  |      |  Delay  |       | Ch 1-4  |
+   |  Pedal   |      |  Pedal  |       | (mixed) |
+   +---------+      +---------+       +---------+
+        ^                ^                  ^
+        |         +------+------+---+---+---+---------+
+        |         |      |      |   |   |   |         |
+   +----+----+ +--+----+ +--+--+ +-+-+ +-+-+ +--+--+ +--+--+
+   |  Ch 1   | | Ch 2  | |Ch 3 | |Ch4| |Ch5| |Ch 6 | |Ch16 |
+   | Drums   | | Bass  | |Lead | |Pad| |FX | | Tex | | ... |
+   | EQ/Cmp/ | |EQ/Cmp/ |EQ/Cm | |   | |   | |     | |     |
+   | Gate/Sat| |Gate/Sat| |     | |   | |   | |     | |     |
+   | [SMC]   | | [SMC]  | |     | |   | |   | |     | |     |
+   +---------+ +-------+ +-----+ +---+ +---+ +-----+ +-----+
+        |         |        |       |     |     |       |
+        v         v        v       v     v     v       v
+   +----------------------------------------------------------+
+   |                    HOUSE BAND ENGINE                       |
+   |              30+ Instruments | 28 Effect Pedals           |
+   +----------------------------------------------------------+
+
+   [SMC] = SoundModelerChain (optional per-channel or bus insert)
 ```
 
 ---
 
-## Channel Strip
+## 16-Channel Mixer
 
-Each channel in ConsoleX has:
+### Channel Strip
 
-### Input Section
-- **Source selector**: Which instrument/track feeds this channel
-- **Input gain**: Pre-fader level
-- **Phase invert**: Polarity flip
+Each of the 16 channels has:
 
-### EQ Section
-- **Low shelf**: 80Hz, ±12dB
-- **Low mid**: 250Hz, Q=1.0, ±12dB
-- **High mid**: 2.5kHz, Q=1.0, ±12dB
-- **High shelf**: 12kHz, ±12dB
+- **Per-channel EQ** — 4-band parametric
+- **Compressor** — Threshold, ratio, attack, release, knee
+- **Gate** — Threshold, attack, hold, release
+- **Saturation** — Analog-style warmth and drive
+- **Console Bus** — Airwindows Console processing per channel
 
-### Dynamics Section
-- **Compressor**: Threshold, ratio, attack, release, knee
-- **Gate**: Threshold, attack, hold, release
+### Per-Channel Processing Chain
 
-### Fader Section
-- **Volume fader**: -∞ to +12dB
-- **Pan knob**: L100 to R100
-- **Mute**: Cut signal
-- **Solo**: Isolate channel
+```
+Instrument Output
+       |
+       v
+[EQ: Lo/LoMid/HiMid/Hi]
+       |
+       v
+[Compressor: Thresh/Ratio/Attack/Release]
+       |
+       v
+[Gate: Thresh/Attack/Hold/Release]
+       |
+       v
+[Saturation: Drive/Tone]
+       |
+       v
+[Console Bus Processing (Airwindows)]
+       |
+       v
+[Fader: Volume + Pan + Mute + Solo]
+       |
+       v
+[Send: Aux 1-4]
+       |
+       v
+To Group/Master Bus
+```
 
-### Sends
-- **Aux 1-4**: Post-fader sends to effect buses
-- **Pre-fader option**: For parallel processing
+### Sound Modeler Chain Integration
+
+Sound modelers can be inserted at multiple points in the mixing path:
+
+Per-Channel Insert Points:
+  Instrument Output -> [EQ] -> [Compressor] -> [Gate] -> [Saturation] -> [SoundModelerChain] -> [Console Bus] -> [Fader]
+
+Bus Insert Points:
+  Bus Input -> [ConsoleEncode] -> [Bus Sum] -> [ConsoleDecode] -> [SoundModelerChain] -> [Bus Processing]
+
+Master Insert Points:
+  Master Input -> [SoundModelerChain] -> [Console Bus] -> [Limiter] -> [Stereo Width] -> [Output]
+
+### De-Zippering
+
+All continuous parameters (gain, pan, send levels, effect wet/dry) are applied with configurable de-zippering. Default: 10ms ramp. No zipper noise on any output path.
 
 ---
 
@@ -85,9 +122,9 @@ Each channel in ConsoleX has:
 
 ### Group Buses
 Combine related channels:
-- **Drums**: Kick, snare, hats, toms → Drum bus
-- **Vocals**: Lead, backing, harmonies → Vocal bus
-- **Instruments**: Synths, pads, leads → Instrument bus
+- **Drums**: Kick, snare, hats, toms -> Drum bus
+- **Vocals**: Lead, backing, harmonies -> Vocal bus
+- **Instruments**: Synths, pads, leads -> Instrument bus
 
 ### Aux Buses
 Parallel processing sends:
@@ -97,111 +134,47 @@ Parallel processing sends:
 - **Aux 4**: Parallel compression
 
 ### Master Bus
-Final stereo output:
+Final stereo output with Airwindows Console bus processing:
+- **Console bus**: Analog console summing emulation
 - **Limiter**: Brick-wall protection
 - **Stereo width**: Mono to super-wide
 - **Master EQ**: Tonal balance
-- **Loudness metering**: LUFS readout
 
 ---
 
 ## House Band Channels
 
-The virtual ensemble:
+The virtual ensemble across 16 channels:
 
-| Channel | Role | Default Instrument |
-|---------|------|-------------------|
-| 1 | Drums | Kane (percussion mode) |
-| 2 | Bass | Growl |
-| 3 | Chords | Aether (pad mode) |
-| 4 | Lead | Kane |
-| 5 | Pad | Aether |
-| 6 | Texture | Choral |
-| 7 | FX | FilterGate |
+| Channels | Role | Typical Instruments |
+|----------|------|-------------------|
+| 1-4 | Rhythm section | Drums (4 variants), Percussion |
+| 5-8 | Bass and harmony | Growl, Aether, LocalGal |
+| 9-12 | Lead and counterline | Kane, NexSynth, Breath |
+| 13-16 | Texture and FX | Choral, Motion, Nature, VoiceSynth |
 
 Each channel:
-- Receives MIDI from Schillinger Engine
-- Routes to assigned instrument
-- Has full channel strip processing
+- Receives MIDI from Schillinger Engine or manual input
+- Routes to assigned instrument via SongBridge
+- Has full channel strip processing (EQ/comp/gate/sat)
 - Can send to aux buses
+- Supports up to 32 voices (512 total across 16 channels on Pi 5)
 
 ---
 
-## Signal Flow
+## Control Paths
+
+Mixer controls work over both local FFI and remote WebSocket:
 
 ```
-MIDI In
-   │
-   ▼
-┌──────────┐
-│  House   │
-│  Band    │──────┐
-│Instrument│      │
-└──────────┘      │
-   │              │
-   ▼              ▼
-┌──────────┐  ┌──────────┐
-│ Channel  │  │   Aux    │
-│  Strip   │  │   Send   │
-└────┬─────┘  └────┬─────┘
-     │             │
-     ▼             ▼
-┌──────────┐  ┌──────────┐
-│  Group   │  │   FX     │
-│   Bus    │  │  Return  │
-└────┬─────┘  └────┬─────┘
-     │             │
-     └──────┬──────┘
-            ▼
-     ┌────────────┐
-     │   Master   │
-     │    Bus     │
-     └─────┬──────┘
-           ▼
-      ┌─────────┐
-      │  Output │
-      └─────────┘
+User moves fader
+  -> ViewsControls (fader)
+    -> AudioEngineBackend.setMixerGain()
+      -> [Local] wr_houseband_mixer_set_gain() via FFI -> ParameterManager
+      -> [Remote] WebSocket command -> Pi server -> ParameterManager
+        -> LinearSmoothedValue::setTarget()
+          -> Smoothed value applied in next audio block
 ```
-
----
-
-## ConsoleX UI
-
-### Layout
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│  Transport:  ▶ ▶▶ ⏹ ⏺ │  BPM: 120 │  Time: 1.2.3.4 │  CPU: 23%   │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  ┌───┐ ┌───┐ ┌───┐ ┌───┐ ┌───┐ ┌───┐ ┌───┐ ┌───┐                 │
-│  │ 1 │ │ 2 │ │ 3 │ │ 4 │ │ 5 │ │ 6 │ │ 7 │ │MST│   Channels      │
-│  │   │ │   │ │   │ │   │ │   │ │   │ │   │ │   │                 │
-│  │ ▓ │ │ ▓ │ │ ▓ │ │ ▓ │ │ ▓ │ │ ▓ │ │ ▓ │ │ ▓ │   Meters       │
-│  │   │ │   │ │   │ │   │ │   │ │   │ │   │ │   │                 │
-│  └───┘ └───┘ └───┘ └───┘ └───┘ └───┘ └───┘ └───┘                 │
-│                                                                     │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │                    SELECTED CHANNEL                          │   │
-│  │  EQ:      ░░▓▓░░      ░░░▓░░░      ░░▓▓░░      ░░░░▓░░    │   │
-│  │          80Hz       250Hz       2.5kHz      12kHz           │   │
-│  │                                                              │   │
-│  │  Dynamics:  ▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░                          │   │
-│  │            Threshold -12dB  Ratio 4:1  Attack 10ms          │   │
-│  │                                                              │   │
-│  │  Sends:    Aux1: 0.3  Aux2: 0.1  Aux3: 0.0  Aux4: 0.0      │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-### Interactions
-
-- **Click channel**: Select for detailed view
-- **Drag fader**: Adjust volume
-- **Double-click fader**: Reset to 0dB
-- **Shift+drag**: Fine adjustment
-- **Right-click**: Context menu (routing, presets)
 
 ---
 
@@ -211,18 +184,11 @@ MIDI In
 
 | Parameter | Range | Automation Mode |
 |-----------|-------|-----------------|
-| Volume | -∞ to +12dB | Touch, Latch, Write |
+| Volume | -inf to +12dB | Touch, Latch, Write |
 | Pan | L100 to R100 | Touch, Latch, Write |
 | Mute | On/Off | Touch |
 | Send levels | 0 to 1 | Touch, Latch, Write |
-| Plugin parameters | Varies | Touch, Latch, Write |
-
-### Automation Modes
-
-- **Read**: Plays back automation
-- **Touch**: Writes while touching, returns to previous on release
-- **Latch**: Writes while touching, stays at last position
-- **Write**: Overwrites all existing automation
+| Effect parameters | Varies | Touch, Latch, Write |
 
 ---
 
@@ -233,14 +199,15 @@ MIDI In
 | Component | Budget |
 |-----------|--------|
 | Input processing | 1ms |
-| Channel strip | 1ms |
+| Channel strip (EQ/comp/gate/sat) | 1ms |
 | Bus routing | 0.5ms |
-| Master processing | 2ms |
+| Console bus processing | 0.5ms |
+| Master processing | 1.5ms |
 | **Total** | **4.5ms** |
 
 ### CPU Usage
 
-- Target: < 50% total
+- Target: < 50% total (60% on Pi 5)
 - Per channel: < 3%
 - Master bus: < 5%
 
@@ -249,3 +216,4 @@ MIDI In
 - All fader/pan reads: Atomic
 - Buffer processing: Lock-free
 - UI updates: Main thread only
+- RT safety: Zero heap allocations in audio callback

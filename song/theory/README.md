@@ -122,37 +122,64 @@ Energy
 
 ## Implementation in White Room
 
-### Five-Tab Interface
+### Continuous Reactive Analysis
 
-1. **Form Tab**
-   - Define section order
-   - Set section lengths
-   - Draw energy curve
-   - Mark transitions
+Schillinger analysis runs continuously as notes change — not as a separate tab or mode. A dedicated worker thread (pinned to core 0 or 1, never audio cores) processes analysis via lock-free MPSC queue, with results appearing within 500ms of any note change.
 
-2. **Rhythm Tab**
-   - Select resultant numbers
-   - Choose interference mode
-   - Set density
-   - Apply swing
+### Overlay Lenses
 
-3. **Melody Tab**
-   - Choose scale
-   - Draw contour
-   - Set interval constraints
-   - Define motifs
+Color-coded overlays render directly on the piano roll, toggleable by the user:
 
-4. **Harmony Tab**
-   - Select progression
-   - Set harmonic rhythm
-   - Configure voice leading
-   - Assign inversions
+| Lens | Color | Shows |
+|------|-------|-------|
+| **Generators** | Blue | Which Schillinger generators produced each note |
+| **Scale Degrees** | Green | Scale degree of each pitch |
+| **Contour** | Yellow | Melodic contour (rising/falling/arch) |
+| **Tension** | Red | Harmonic tension level |
+| **Voice Leading** | Purple | Voice leading paths between chords |
 
-5. **Orchestration Tab**
-   - Map roles to instruments
-   - Set density per section
-   - Define articulations
-   - Control dynamics
+### Bidirectional Drum Support
+
+The Schillinger system works bidirectionally for drums:
+- **Generate**: Schillinger params -> drum pattern (resultants, interference, density)
+- **Analyze**: Existing drum pattern -> Schillinger report (what theory it follows)
+- **Lock mode**: Lock specific drum hits (e.g., hi-hat pattern) and regenerate everything else
+
+### Density Curves
+
+Schillinger density parameters drive continuous density curves visible at song, section, and track levels:
+- Density curve rendered as a continuous line (not a knob)
+- Inherited hierarchy: song -> section -> track (each can override independently)
+- Breakpoints on the curve for manual shaping
+- Density strategies: linear, exponential, stepped, Schillinger resultant
+- Manual notes always preserved during density changes
+- Note origin tracking: every note tagged as 'manual' or 'generated' at DSP level
+
+### Analysis Pipeline
+
+```
+Note Input Change
+       |
+       v
+[Worker Thread] (core 0 or 1, SCHED_OTHER)
+       |
+       v
+[ReverseEngineeringBridge]
+       |
+       +-- PitchModel
+       +-- RhythmModel
+       +-- HarmonyModel
+       |
+       v
+[Lock-free MPSC Queue] -> UI Thread
+       |
+       v
+[Overlay Lens Rendering on Piano Roll]
+       |
+       +-- Ambient Info Bubbles (contextual analysis insights)
+       +-- Density Curve Updates
+       +-- Spinner -> Checkmark on completion
+```
 
 ---
 
@@ -160,21 +187,24 @@ Energy
 
 ```
 Form (structure)
-    │
-    ▼
+    |
+    v
 Rhythm (timing grid)
-    │
-    ▼
+    |
+    v
 Melody (pitch content)
-    │
-    ▼
+    |
+    v
 Harmony (chord framework)
-    │
-    ▼
+    |
+    v
 Orchestration (instrument assignment)
-    │
-    ▼
-House Band (performance)
+    |
+    v
+Density (density curves at song/section/track levels)
+    |
+    v
+House Band (16-channel performance)
 ```
 
 ---

@@ -258,4 +258,4 @@ The Composition Engine connects to the Swift Frontend via FFI:
 - [Theory](../theory/) — Schillinger System mathematical foundation
 - [Songwriting](../songwriting/) — Creative application
 - [DSP](../../sound/dsp/) — Sound synthesis triggered by composition
-- [System Intelligence](../../system/intelligence/) — System integration layer
+- [Frontend](../../system/frontend/) — Application layer with Room Architecture

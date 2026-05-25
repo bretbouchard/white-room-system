@@ -134,30 +134,33 @@ Energy
 
 ### Instrument Assignment
 
-The songwriter assigns parts to House Band instruments:
+The songwriter assigns parts to House Band instruments across 16 channels:
 
 | Part | Typical Instrument | Sound Substrate Engine |
 |------|-------------------|----------------------|
-| Drums | Kane (percussion) | Modal + Chaos |
+| Drums | Drums (4 variants) | Synthesis + Samples |
 | Bass | Growl | Chaos + Additive |
 | Chords | Aether (pad mode) | Additive + Granular |
-| Lead | Kane | Modal |
-| Texture | Choral | Spectral + Granular |
-| FX | FilterGate | Effect processing |
+| Lead | Kane | Wavetable/VA |
+| Texture | Choral/ChoirV2 | Spectral |
+| Lead Alt | NexSynth | FM |
+| Atmosphere | Motion | Granular |
+| Voice | VoiceSynth | DDSP + Core ML |
 
 ### Voice Allocation
 
-Using Schillinger's orchestration principles:
+Using Schillinger's orchestration principles across 16 channels:
 
 ```
                     Frequency Range
                     Low    Mid    High
-                    ──────────────────
-Drums (Kane)        ████████████
-Bass (Growl)        ████████████
-Chords (Aether)          ████████████
-Lead (Kane)                   ████████████
-Texture (Choral)        ████████████████████
+                    ------------------
+Drums (4 variants)  ===============
+Bass (Growl)        ===========
+Chords (Aether)          ==============
+Lead (Kane)                   ==============
+Texture (Choral)        ====================
+Voice (VoiceSynth)              ==============
 ```
 
 ---

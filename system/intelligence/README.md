@@ -1,5 +1,7 @@
 # BettaFish-MiroFish Intelligence Layer
 
+> **Note:** This directory has been superseded. The composition engine documentation now lives in [Song / Engine](../../song/engine/). The system layer now covers [Frontend](../frontend/), [Network](../network/), and [ML](../ml/).
+
 Multi-member generative composition system for White Room.
 
 ---
