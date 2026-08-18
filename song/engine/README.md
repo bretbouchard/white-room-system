@@ -126,7 +126,7 @@ User Intent
 
 **Purpose:** Voice-leading and species counterpoint validation
 
-**Technology:** Python implementation of Charles Koechlin's *Précis des Règles du Contrepoint*
+**Technology:** TypeScript implementation of Koechlin voice-leading rules (`realization/` in the SDK)
 
 **Capabilities:**
 - 2-4 voice counterpoint validation
@@ -196,38 +196,25 @@ FeatureRegistrySchema
 
 ---
 
-## FFI Integration
+## Integration Status (August 2026)
 
-The Composition Engine connects to the Swift Frontend via FFI:
+Honest current state: the TypeScript engine is **not called from the Swift app via FFI**.
 
 ```
-┌─────────────────────────────────────┐
-│  SWIFT FRONTEND                     │
-│  └── SwiftUI, XCFramework           │
-└─────────────────┬───────────────────┘
-                  │ FFI Bridge
-                  ▼
-┌─────────────────────────────────────┐
-│  BETTAFISH-MIROFISH                 │
-│  ┌─────────────────────────────┐    │
-│  │ Forum Engine (TypeScript)   │    │
-│  └─────────────────────────────┘    │
-│  ┌─────────────────────────────┐    │
-│  │ Simulation (TypeScript)     │    │
-│  └─────────────────────────────┘    │
-│  ┌─────────────────────────────┐    │
-│  │ Counterpoint (Python)       │    │
-│  └─────────────────────────────┘    │
-└─────────────────┬───────────────────┘
-                  │ Triggers
-                  ▼
-         DSP (Sound Substrate)
+Swift Frontend (SwiftUI)
+    +-- Native composition features (SharedAI agents, FunctionBridge)
+    |       maps musical functions to BettaFish actor *concepts* in pure Swift
+    +-- FFI --> C++20 DSP engine (XCFramework)  [the only FFI path]
+
+SDK (TypeScript, runs under Node/Vitest)
+    +-- BettaFish forum + MiroFish simulation + renderers
+    +-- Standalone: exercised by its own test suite, not by the shipping app
 ```
 
 **Key Points:**
-- Swift calls BettaFish directly via FFI for composition operations
-- Counterpoint (Python) is called by the Forum Engine for voice-leading
-- Composition engine triggers DSP when producing audio events
+- The Swift app's composition features are native Swift; `FunctionBridge` mirrors the BettaFish actor model but does not invoke the TypeScript engine
+- No Node/child-process bridge from the app to the TS engine exists today
+- Treat the agent-style simulation layers as active R&D, not fully integrated product architecture
 
 ---
 
@@ -235,7 +222,7 @@ The Composition Engine connects to the Swift Frontend via FFI:
 
 1. **Determinism** — Same seed → identical output
 2. **Explainability** — Every decision traceable to members
-3. **Testability** — 100% coverage requirement
+3. **Testability** — Comprehensive Vitest suite (component phases reported 100% pass rates at build time)
 4. **Streaming** — Real-time UI updates via events
 5. **Extensibility** — New members can be added easily
 
@@ -247,8 +234,8 @@ The Composition Engine connects to the Swift Frontend via FFI:
 |-----------|------------|---------|
 | Forum Engine | TypeScript + Zod | Multi-member deliberation |
 | Simulation Engine | TypeScript | Temporal state evolution |
-| Counterpoint | Python + Koechlin | Voice-leading validation |
-| Testing | Vitest | 100% coverage |
+| Counterpoint | TypeScript + Koechlin rules | Voice-leading validation |
+| Testing | Vitest | Comprehensive suite |
 | Streaming | Node.js EventEmitter | Real-time updates |
 
 ---

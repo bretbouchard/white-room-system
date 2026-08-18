@@ -10,7 +10,7 @@ The frontend is the user-facing application that integrates:
 - **Song** — Composition workspace with piano roll, step sequencer, Schillinger analysis
 - **Ensemble** — Instrument selection, presets, deep editors, modulation
 - **Mix** — 16-channel ConsoleX mixer with effect chains
-- **DSP** — Sound Substrate via WhiteRoomKit (XCFramework or Pi 5 via WebSocket)
+- **DSP** — Sound Substrate via WhiteRoomKit (XCFramework today, Pi 5 remote path under active development)
 - **ML** — Core ML voice synthesis, composition assistance
 
 ---
@@ -83,9 +83,39 @@ Slide-in panel for mixing:
 |----------|--------|-------|
 | **iPad** | Panels slide from right, Song compresses | Primary device |
 | **iPhone** | Full-width sheet presentation | Adaptive layout |
-| **Mac** | Resizable side panels (NavigationSplitView) | Native SwiftUI app |
+| **Mac** | Resizable side panels (NavigationSplitView) | Native SwiftUI app, AUv3 host support |
 | **Apple TV** | Transport-focused remote control (10-foot UI) | Siri Remote, no piano roll |
-| **visionOS** | Standard Room Architecture | Spatial computing |
+
+Current product note as of August 5, 2026:
+
+- active app targets and release work are centered on iOS, iPadOS, macOS, and tvOS
+- visionOS appears in some docs and build artifacts, but should not be treated as a current shipping frontend target
+
+### AUv3 Distribution Status
+
+White Room can host AUv3 plugins on macOS, but the current shipping macOS app
+does not yet bundle the `WhiteRoomVoiceSynthAUv3` extension.
+
+As verified on August 5, 2026:
+
+- `WhiteRoommacOS` has no target dependency on `WhiteRoomVoiceSynthAUv3`
+- `WhiteRoommacOS` has no embed/copy app-extension build phase
+- `WhiteRoomVoiceSynthAUv3` is currently defined as an iOS app-extension target
+
+So today:
+
+- iOS/iPadOS can deliver VoiceSynth AUv3 through the iOS host app
+- macOS can host installed AUv3 plugins
+- macOS does not yet expose White Room's own VoiceSynth AUv3 plugin bundle
+
+### Feature Completeness Notes
+
+Some capabilities still have partial or evolving product status even when code
+exists in the repo:
+
+- remote Pi control is implemented as an architecture and code path, but not yet a fully qualified release target
+- export, file interchange, and other utility workflows should be described based on current UI exposure and release verification, not on source presence alone
+- older multiplayer and experimental AI references still exist in parts of the repo and should not be read as promises of current shipped behavior
 
 ### The Apple TV Threshold
 
@@ -134,7 +164,7 @@ WhiteRoomEngine (protocol, in WhiteRoomKit)
 
 - Engine mode selection: `.live`, `.mock`, or `.remote` via protocol, not if/else
 - `SongStateConverter` produces identical JSON for all three paths
-- Transport push via WebSocket subscription (replaces 60fps FFI polling)
+- Transport push via WebSocket subscription is the intended remote model; some app flows still contain simulation/TODO scaffolding while parity work continues
 - Connection status UI shows latency, CPU, packet loss
 - All 11 sub-APIs accessible through `WhiteRoomEngine`
 - `MockEngine` provides deterministic testing without any C++ FFI dependency
@@ -214,7 +244,6 @@ WhiteRoom.xcframework/
 +-- macos-arm64_x86_64/
 +-- tvos-arm64/
 +-- tvos-arm64_x86_64-simulator/
-+-- visionos-arm64_x86_64-simulator/
 ```
 
 ### Module Structure

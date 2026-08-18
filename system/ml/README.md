@@ -13,7 +13,10 @@ The ML layer provides:
 - **Audio Analysis** — Style classification, preset recommendations
 - **Voice/Choir** — Multi-voice choir mode with individual controls
 
-All inference runs on-device. No cloud. No API calls. No user data leaves the device.
+Most of the current ML direction is on-device, especially for the Core ML voice
+pipeline and newer local composition features. That said, the repository also
+contains cloud-oriented clients and WebSocket-based ML integrations, so this
+atlas should not make a blanket "no cloud" claim across the entire codebase.
 
 ---
 
@@ -132,7 +135,9 @@ Compact popup/sidebar for natural language music direction:
 - "Add a counter-melody"
 - "Change the harmony to Lydian"
 
-Chat triggers generation via Schillinger engine. Responses include Schillinger-aware context.
+Chat and prompt-driven generation in the current Swift stack are increasingly
+structured around local reasoning and composition services. Older cloud-facing
+integration code also remains in the repo.
 
 ### ML Suggestions
 
@@ -161,10 +166,14 @@ Swift (VoiceInferenceManager)
           -> AudioGraph (mixer output)
 ```
 
-### On-Device Processing
+### Processing Reality
 
-All ML inference runs locally:
-- No API calls to external services
-- No user data leaves the device
-- Core ML models run on Neural Engine / GPU / CPU (Core ML auto-selects)
-- DSP fallback ensures voice always works
+What is true today:
+- the voice/DDSP path is designed for on-device Core ML inference with DSP fallback
+- current Swift composition work includes on-device generation and reasoning components
+- Core ML models run on Neural Engine / GPU / CPU as selected by Core ML
+- DSP fallback ensures the voice instrument still functions if model loading fails
+
+What should not be overstated:
+- the repo also contains cloud API and ML WebSocket client code
+- "no API calls" and "no cloud" are not safe blanket statements for the entire ML surface without narrowing the claim to specific features

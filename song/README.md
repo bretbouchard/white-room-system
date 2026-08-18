@@ -32,7 +32,7 @@ The mathematical foundation for composition, running as continuous reactive anal
 
 ### [Engine](./engine/) — BettaFish-MiroFish Layer
 
-The generative composition system:
+The generative composition system (**active R&D** — the TypeScript engine runs standalone in the SDK and is not yet invoked by the shipping Swift app; see [Engine](./engine/) for integration status):
 
 - **Forum Engine** — Multi-member deliberation (6 Musical Specialists)
 - **Simulation Engine** — Temporal state evolution

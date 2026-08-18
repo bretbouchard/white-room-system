@@ -30,6 +30,10 @@ Present when needed. Invisible when not.
 
 This is a **System Atlas** -- public architecture documentation for a private codebase.
 
+It is intended to describe the current product and codebase honestly. When a
+capability is still experimental, partially integrated, or planned, this atlas
+should say so explicitly rather than presenting it as already shipped.
+
 - **What's here**: Architecture, design decisions, patterns, technology choices
 - **What's not here**: Source code, algorithms, presets, implementation details
 
@@ -40,6 +44,22 @@ I'm Bret Bouchard. I've been building White Room for 3+ years as a solo develope
 - **Hiring managers** -- See the engineering behind the product
 - **Potential collaborators** -- Understand the architecture before conversations
 - **Future me** -- Document decisions while I still remember why I made them
+
+### Beta Access
+
+If you want TestFlight access to White Room or VoiceSynth, email
+`bretbouchard@gmail.com` with:
+
+- the platform you want to test (`iPhone/iPad`, `Apple TV`, or `Mac`)
+- your TestFlight Apple ID email if it differs from your contact address
+- the host app you want to use for VoiceSynth AUv3
+- the device and OS version you plan to test on
+
+Current distribution note as of August 5, 2026:
+
+- iOS, tvOS, and macOS builds share one App Store Connect app record
+- VoiceSynth AUv3 is delivered through a host app, not a standalone TestFlight app
+- the current macOS app does not yet embed the VoiceSynth AUv3 extension
 
 ---
 
@@ -59,7 +79,7 @@ SONG (Composition)
 SOUND (Audio)
 ```
 
-### Actual Data Flow
+### Current Engine Data Flow
 
 ```
 Swift Frontend
@@ -68,17 +88,15 @@ Swift Frontend
     |       |
     |       +-- LiveEngine (.live) -- FFI --> C++20 DSP
     |       +-- MockEngine (.mock) -- Deterministic stubs
-    |       +-- RemoteEngine -- WebSocket --> Pi 5 Engine
+    |       +-- RemoteEngine -- WebSocket --> Pi 5 Engine path in active development
     |
-    +-- FFI --> BettaFish-MiroFish (TS/Python)
-    |                  |
-    |                  +-- Forum Engine (TypeScript)
-    |                  +-- Simulation Engine (TypeScript)
-    |                  +-- Counterpoint Engine (Python/Koechlin)
-    |                  |
-    |                  +-- Triggers --> DSP
+    +-- Shared AI / analysis services
+    |       |
+    |       +-- On-device composition and analysis features
+    |       +-- Voice / DDSP Core ML pipeline
+    |       +-- Some cloud-oriented clients and WebSocket integrations remain in repo
     |
-    +-- FFI --> DSP (C++20) <-- Direct access
+    +-- FFI --> DSP (C++20)
 ```
 
 ---
@@ -92,12 +110,10 @@ Your composition. Theory, engine, and craft combined.
   - Harmonic progressions and voice leading
   - Orchestration and form
 
-- **[Composition Engine](./song/engine/)** -- BettaFish-MiroFish Layer
-  - Forum Engine: Multi-member deliberation (6 Musical Specialists) -- TypeScript
-  - Simulation Engine: Temporal state evolution -- TypeScript
-  - Counterpoint Engine: Koechlin voice-leading, species rules -- Python
-  - Ensemble Members: Bass, Harmony, Lead, Counterline, Texture
-  - Renderer/Realizer: Simulation to musical output
+- **[Composition Engine](./song/engine/)** -- Composition and reasoning layer
+  - White Room includes shipped composition tooling and theory-aware generation
+  - BettaFish / MiroFish concepts still appear in plans, experiments, and some UI copy
+  - Those agent-style simulation layers should be treated as active R&D, not as fully integrated product architecture
 
 - **[Songwriting](./song/songwriting/)** -- Creative Application
   - Song structure and arrangement
@@ -144,23 +160,20 @@ The packaging layer. Frontend, engine kit, network, and ML combined.
   - White Room's engine layer -- pure Swift, fully testable
 
 - **[Frontend](./system/frontend/)** -- White Room Application Layer
-  - SwiftUI interface across iOS, iPadOS, macOS, tvOS, visionOS
+  - SwiftUI interface across iOS, iPadOS, macOS, and tvOS
   - Room Architecture: 3-area navigation (Song / Ensemble / Mix)
   - WhiteRoomEngine protocol via WhiteRoomKit
   - XCFramework integration with C++ DSP engine
 
 - **[Network](./system/network/)** -- Pi 5 Network Engine
-  - Headless network-attached synth engine on Raspberry Pi 5
-  - WebSocket control (JSON commands, state push, binary song transfer)
-  - WebSocket mirrors WhiteRoomKit API 1:1 (zero feature gap)
-  - Pipewire audio infrastructure (sole daemon)
-  - Buildroot system image with PREEMPT_RT kernel
-  - CPU isolation, thermal management, crash recovery
+  - Headless network-attached synth engine architecture for Raspberry Pi 5
+  - Substantial WebSocket, discovery, and Pipewire code exists in the repo
+  - End-to-end product qualification and release hardening are still in progress
 
 - **[ML](./system/ml/)** -- Machine Learning
   - Core ML voice synthesis (DDSP)
-  - Composition assistance and style classification
-  - Audio analysis and mix coaching
+  - Composition assistance and analysis features
+  - Primarily on-device inference, with some cloud-oriented integrations still present in the codebase
 
 ---
 

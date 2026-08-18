@@ -190,19 +190,20 @@ FeatureRegistrySchema
 
 **Location:** `sdk/packages/core/src/` in main repository
 
-**Subdirectories:**
+**Subdirectories (actual):**
 ```
-├── schemas/bettafish/     # Phase 33.1
-├── forum-engine/          # Phase 33.2
-├── simulation/            # Phase 33.3
-├── ensemble/              # Phase 33.4
-└── renderer/              # Phase 33.6
+├── schemas/bettafish/     # Zod schemas (Phase 33.1)
+├── bettafish/forum/       # Forum Engine (Phase 33.2)
+├── bettafish/simulation/  # Simulation Engine (Phase 33.3)
+├── bettafish/agents/      # Ensemble agents
+├── bettafish/actors/      # Ensemble actors
+└── renderer/              # Renderer/Realizer
 ```
 
 **Technology Stack:**
 - TypeScript 5.3+
 - Zod 3.22+ (runtime validation)
-- Vitest 1.0+ (testing with 100% coverage)
+- Vitest 1.0+ (comprehensive suite; component phases reported 100% pass rates at build time)
 - Node.js EventEmitter (streaming)
 
 ---
@@ -224,7 +225,7 @@ Users can observe and understand the intelligence layer:
 
 1. **Determinism** — Same seed → identical output
 2. **Explainability** — Every decision traceable to members
-3. **Testability** — 100% coverage requirement
+3. **Testability** — Comprehensive Vitest suite
 4. **Streaming** — Real-time UI updates via events
 5. **Extensibility** — New members can be added easily
 

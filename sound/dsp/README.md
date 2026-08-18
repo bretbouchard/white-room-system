@@ -67,14 +67,16 @@ This separation means:
 
 tvOS has no support for external synths or effects — no AudioUnit hosting, no plugin loading. If White Room works on Apple TV, it works everywhere:
 
+**Current reality (August 2026):** shipped builds are iOS/iPadOS, macOS, and tvOS on a single App Store Connect record. The C++ DSP layer is written to be portable and Windows/Linux plugin scaffolding exists in the repo (CLAP extensions, LV2 backend), but no Windows or Linux builds are shipped or qualified. Treat those targets as design intent, not shipped platforms.
+
 | Platform | External Plugins | White Room |
 |----------|------------------|------------|
-| **tvOS** | ❌ Not supported | ✅ Built-in |
-| **iOS** | ✅ AUv3 hosting | ✅ Native |
-| **macOS** | ✅ AU/VST3/CLAP | ✅ Native |
-| **visionOS** | ⚠️ Limited | ✅ Native |
-| **Windows** | ✅ VST3/CLAP | ✅ Portable |
-| **Linux** | ✅ LV2/CLAP | ✅ Portable |
+| **tvOS** | ❌ Not supported | ✅ Shipped |
+| **iOS** | ✅ AUv3 hosting | ✅ Shipped |
+| **macOS** | ✅ AU/VST3/CLAP | ✅ Shipped |
+| **visionOS** | ⚠️ Limited | 🧪 Not shipped |
+| **Windows** | ✅ VST3/CLAP | 🧪 Portable code, not shipped |
+| **Linux** | ✅ LV2/CLAP | 🧪 Portable code, not shipped |
 
 **We built for the TV so we could work everywhere.**
 
@@ -82,10 +84,10 @@ tvOS has no support for external synths or effects — no AudioUnit hosting, no 
 
 | Format | Platforms | Status |
 |--------|-----------|--------|
-| **AUv3** | iOS, macOS, tvOS, visionOS | ✅ Primary |
-| **VST3** | macOS, Windows, Linux | ✅ Supported |
-| **CLAP** | macOS, Windows, Linux | ✅ Supported |
-| **LV2** | Linux | ✅ Supported |
+| **AUv3** | iOS, macOS, tvOS | ✅ Primary (shipped) |
+| **VST3** | macOS, Windows, Linux | 🧪 Scaffolding exists, not shipped |
+| **CLAP** | macOS, Windows, Linux | 🧪 Scaffolding exists, not shipped |
+| **LV2** | Linux | 🧪 Scaffolding exists, not shipped |
 | **Standalone** | All platforms | ✅ Development |
 
 For Apple platforms, Sound Substrate is distributed as **XCFramework**. See [Frontend](../../system/frontend/) for integration details.

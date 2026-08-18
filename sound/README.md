@@ -23,7 +23,7 @@ The audio engine. DSP-first architecture with minimal JUCE dependencies (7 kept,
 - 30+ instruments across 16 synthesizer families, samplers, orchestral, keys, and drums
 - 10+ synthesis engines: FM, Wavetable/VA, Additive, Granular, Physical Modeling, Spectral, DDSP, Chaos, Modal, Sample-based
 - 28 effect pedals
-- Cross-platform: iOS, macOS, tvOS, visionOS, Windows, Linux
+- Shipped platforms: iOS, iPadOS, macOS, tvOS (Windows/Linux are portable-code targets, not shipped)
 
 ### [Modelers](./modelers/) — ISoundModeler System
 

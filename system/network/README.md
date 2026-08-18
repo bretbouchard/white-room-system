@@ -6,7 +6,14 @@ Headless network-attached synth engine on Raspberry Pi 5.
 
 ## What This Is
 
-The Pi 5 runs the full White Room C++ audio engine as a headless service. Apple devices (iPad, iPhone, Mac, Apple TV) connect over WiFi or Ethernet and control it via WebSocket. The Pi handles all DSP; the Apple device handles all UI.
+The Pi 5 network path is an active White Room architecture and implementation
+track. The repo contains real remote-engine, discovery, protocol, and Pi audio
+backend code, but this path should not be described as fully release-qualified
+until the physical Pi image and end-to-end system validation are complete.
+
+Apple devices (iPad, iPhone, Mac, Apple TV) are intended to connect over WiFi
+or Ethernet and control it via WebSocket. The Pi handles DSP; the Apple device
+handles UI.
 
 **The iPad becomes the face. The Pi becomes the brain.**
 
@@ -19,7 +26,7 @@ Apple Device (Controller)              Pi 5 / CM5 (Engine)
 +-------------------------------+     +-------------------------------+
 |  SwiftUI UI                   |     |  WebSocket Control Server     |
 |  Room Architecture            |     |  (libwebsockets, C++)         |
-|  AudioEngineBackend           |<--->|  Protocol v1.0                |
+|  Remote engine client         |<--->|  Protocol v1.0                |
 |   +-- Remote (WebSocket) -----+--+  |                               |
 +-------------------------------+  |  |  White Room Engine (C++)      |
                                   +->|  +-- Sound Substrate (C++20)  |
@@ -93,7 +100,9 @@ JSON-based bidirectional protocol over WebSocket:
 
 ### WhiteRoomKit API Mirroring
 
-The WebSocket server mirrors the WhiteRoomKit engine API 1:1. Every method available through the WhiteRoomEngine protocol is accessible via WebSocket JSON-RPC.
+The target design is WhiteRoomKit parity over WebSocket JSON-RPC. A large
+portion of that plumbing exists in the repo, but the system should be described
+as pursuing parity rather than already guaranteeing a verified zero-gap mirror.
 
 Client sends:
   { "method": "transport.play", "id": 1 }
@@ -105,8 +114,8 @@ Server responds:
   { "id": 2, "result": true }
   { "id": 3, "result": {"kind": "AmpCapture", "cpuClass": "moderate"} }
 
-Handler names use domain.method format matching WhiteRoomEngine sub-API decomposition (47 handlers).
-Zero feature gap between native WhiteRoomKit calls and WebSocket commands.
+Handler names use domain.method format matching WhiteRoomEngine sub-API decomposition.
+Treat full parity as a release goal, not a completed claim.
 
 ### Song Transfer
 
@@ -198,6 +207,12 @@ Pi 5 (target)
 +-- systemd restarts service
 +-- < 60s iteration cycle
 ```
+
+Current status note as of August 5, 2026:
+
+- the repo contains `RemoteAudioEngine`, Pi discovery, shared JSON-RPC models, and `pi_port` Pipewire backend code
+- at least one release blocker remains around physical Pi 5 qualification and image/service verification
+- some frontend remote flows still include simulation/TODO scaffolding while the full path is hardened
 
 ---
 
