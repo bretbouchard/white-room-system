@@ -8,10 +8,12 @@ Your composition. Theory, engine, and craft combined.
 
 The Song pillar encompasses everything related to musical composition:
 
-- **Theory** — The mathematical foundation (Schillinger System) running as continuous reactive analysis
-- **Engine** — The generative composition system (BettaFish-MiroFish)
-- **Songwriting** — The creative application of theory
-- **Song Workspace** — The unified composition interface
+- **Theory** — mathematical and musical analysis running continuously against the song
+- **Composition Engine** — structured, theory-aware and AI-assisted musical operations
+- **Songwriting** — creative application of theory and form
+- **Song Workspace** — the unified composition interface
+
+The authoritative Song object is the source of truth. Algorithms and models inspect and transform that structured state through bounded operations rather than replacing it with opaque generated documents.
 
 ---
 
@@ -30,15 +32,16 @@ The mathematical foundation for composition, running as continuous reactive anal
 - Drum lock mode (preserve specific hits during generation)
 - Density curves at song/section/track levels with breakpoint editing
 
-### [Engine](./engine/) — BettaFish-MiroFish Layer
+### [Composition Engine](./engine/) — Structured Musical Operations
 
-The generative composition system (**active R&D** — the TypeScript engine runs standalone in the SDK and is not yet invoked by the shipping Swift app; see [Engine](./engine/) for integration status):
+The composition engine combines typed Song state, theory-aware analysis, deterministic algorithms, domain knowledge, and governed AI assistance.
 
-- **Forum Engine** — Multi-member deliberation (6 Musical Specialists)
-- **Simulation Engine** — Temporal state evolution
-- **Counterpoint Engine** — Koechlin voice-leading, species rules
-- **Ensemble Members** — Bass, Harmony, Lead, Counterline, Texture
-- **Renderer/Realizer** — Simulation to musical output
+- intent resolved against the current Song rather than conversational memory
+- bounded composition operations instead of unrestricted document generation
+- manual/user-authored material can be protected from regeneration
+- harmony, form, scope, timing, and other constraints can be preserved explicitly
+- generated output is validated before becoming authoritative Song state
+- the same Song is realized through mock, live, or remote engine implementations
 
 ### [Songwriting](./songwriting/) — Creative Application
 
@@ -52,7 +55,7 @@ The craft of turning theory into songs:
 
 ## Song Workspace
 
-The Song Area is the default landing view in White Room's Room Architecture. It provides a unified composition workspace:
+The Song Area is the default landing view in White Room's Room Architecture. It provides a unified composition workspace.
 
 ### View Modes
 
@@ -74,16 +77,17 @@ The Song Area is the default landing view in White Room's Room Architecture. It 
 ### Track Listing
 
 Per-section track listing with:
+
 - Instrument name and preset name
 - Mini waveform preview
 - Density indicator
-- Inline mute/solo/volume (no deep navigation needed)
+- Inline mute/solo/volume
 
 ### Density Curves
 
 Continuous density control at three levels:
 
-```
+```text
 Song Level Density ---------> Overall density curve
   |
   +-- Section Override -----> Per-section density breakpoints
@@ -92,42 +96,72 @@ Song Level Density ---------> Overall density curve
 ```
 
 - Strategies: linear, exponential, stepped, Schillinger resultant
-- Manual note preservation: density changes never affect user-placed notes
-- Note origin tracking: every note tagged 'manual' or 'generated' at DSP level
-- Glitch-free changes with configurable crossfade (default 10ms)
+- Manual note preservation: density changes do not need to destroy user-placed notes
+- Note-origin tracking distinguishes manual and generated events
+- Changes are designed for glitch-free playback
 
 ### Ambient Information
 
-Contextual analysis insights surfaced inline:
+Contextual analysis insights can be surfaced inline:
+
 - "This section is in Lydian mode"
 - "Density spike at bar 17"
-- Tap bubble for inline editing of the underlying value
-- Tap bubble for deep-link navigation (density bubble -> density editor)
-- Priority filtering: only 3-5 most impactful insights visible
+- Tap a bubble for inline editing of the underlying value
+- Deep-link from analysis to the relevant editor
+- Priority filtering keeps only the most useful insights visible
 
 ### Song vs Performance Data Model
 
-- **Song** = immutable DNA (notes, sections, Schillinger params)
-- **Performance** = realization params (densities, presets, effects, voicing)
-- Atomic swap at 5 levels: section, instrument, ensemble member, whole ensemble, full performance
-- Share Song DNA by reference; recipients apply own Performance locally
+- **Song** = musical identity and authored structure: notes, sections, theory parameters and relationships
+- **Performance** = realization parameters: densities, presets, effects, voicing and other performance choices
+
+This separation allows the same musical identity to be realized differently without rewriting the composition itself.
+
+---
+
+## AI and the Song
+
+White Room's governed intelligence architecture is documented in [System / Intelligence](../system/intelligence/).
+
+At a high level:
+
+```text
+User intent
+    |
+    v
+Current Song
+    |
+    v
+Model / theory / domain reasoning
+    |
+    v
+White Room composition tools
+    |
+    v
+Validation
+    |
+    v
+Accepted Song mutation
+```
+
+The model is a processor, not the source of truth. Song state, engine capabilities, constraints, user preferences, and executable operations live in the application.
 
 ---
 
 ## Relationship
 
-```
-THEORY              ENGINE                  SONGWRITING
-------              ------                  -----------
-Schillinger   ->    BettaFish-MiroFish  ->   Creative choices
-Math rules    ->    Generative system   ->   Artistic judgment
-Foundation    ->    Real-time decisions ->   Hooks, Arc, Structure
+```text
+THEORY                 COMPOSITION ENGINE              SONGWRITING
+------                 ------------------              -----------
+Schillinger       ->   structured operations      ->   Creative choices
+Analysis          ->   governed AI assistance     ->   Artistic judgment
+Math / rules      ->   validation + transformation->   Hooks, arc, structure
 
-                        |
-                        v
-                  SONG WORKSPACE
-                  Piano Roll | Step Seq | Staff | Drum Pads
-                  Overlay Lenses | Density Curves | Ambient Info
+                              |
+                              v
+                        SONG WORKSPACE
+              Piano Roll | Step Seq | Staff | Drum Pads
+              Overlay Lenses | Density Curves | Ambient Info
 ```
 
-Theory provides the foundation. Engine transforms it into music. Songwriting makes it memorable. The workspace brings it all together.
+Theory provides structured understanding. The composition engine turns intent into bounded musical change. Songwriting supplies artistic direction. The workspace keeps all three inside the same song rather than forcing the musician into separate tools.
