@@ -1,248 +1,179 @@
-# Composition Engine (BettaFish-MiroFish)
+# Composition Engine
 
-Multi-member generative composition system for White Room.
+White Room's composition engine turns musical intent into bounded changes against the current Song rather than asking an AI model to regenerate an opaque song document.
 
----
-
-## Overview
-
-The Composition Engine transforms user intent into musical output through a sophisticated multi-member system:
-
-1. **Intent Interpretation** — Natural language or UI selection → structured intent
-2. **Musical Specialists** — Domain experts propose musical decisions
-3. **Forum Engine (BettaFish)** — Deliberation, conflict resolution, synthesis
-4. **Simulation Engine (MiroFish)** — Temporal state evolution
-5. **Ensemble Members** — Real-time musical decisions
-6. **Renderer/Realizer** — Simulation output to playable music
+The engine combines typed musical state, theory-aware analysis, deterministic composition operations, domain knowledge, and governed AI assistance.
 
 ---
 
-## Architecture
+## Core Rule
 
-```
-User Intent
-    │
-    ▼
-┌─────────────────────────────────────┐
-│     Intent Interpretation Layer     │
-└─────────────────┬───────────────────┘
-                  │
-                  ▼
-┌─────────────────────────────────────┐
-│       Musical Specialists (6)       │
-│  Structure | Harmony | Rhythm       │
-│  Motif | Emotion | Expression       │
-└─────────────────┬───────────────────┘
-                  │ SpecialistProposal[]
-                  ▼
-┌─────────────────────────────────────┐
-│      Forum Engine (BettaFish)       │
-│  • Collection: Parallel execution   │
-│  • Conflict Detection: Overlap score│
-│  • Synthesis: Priority-weighted     │
-│  • Plan Generation: CompositionPlanIR│
-└─────────────────┬───────────────────┘
-                  │ CompositionPlanIR
-                  ▼
-┌─────────────────────────────────────┐
-│    Simulation Engine (MiroFish)     │
-│  • WorldState (12 variables)        │
-│  • Tick Loop: Bar → Phrase → Section│
-│  • Checkpoints: Branch/restore      │
-│  • Event Emission: SimulationTimeline│
-└─────────────────┬───────────────────┘
-                  │ SimulationTimeline
-                  ▼
-┌─────────────────────────────────────┐
-│        Ensemble Members (9)         │
-│  Bass | HarmonyBed | Lead           │
-│  Counterline | Texture              │
-│  Kick | Listener | EnergyCtrl        │
-│  SectionGate                        │
-└─────────────────┬───────────────────┘
-                  │
-                  │ EnsembleAction[]
-                  ▼
-┌─────────────────────────────────────┐
-│        Renderer/Realizer            │
-│  VoiceMapper → MIDI → Audio Export  │
-└─────────────────┬───────────────────┘
-                  │
-                  ▼
-         PatternIR / SongIR
+The **Song is authoritative**.
+
+Models and algorithms may inspect it and propose changes, but accepted changes must flow through structured operations and preserve declared constraints.
+
+```text
+User intent
+    |
+    v
+Current Song + selected scope
+    |
+    v
+Analysis / theory / model reasoning
+    |
+    v
+Structured composition operations
+    |
+    v
+Validation
+    |
+    v
+Accepted Song mutation
+    |
+    v
+WhiteRoomEngine playback
 ```
 
 ---
 
-## Components
+## Composition Inputs
 
-### Musical Specialists (6)
+The engine can reason from:
 
-| Specialist | Domain | Responsibilities |
-|------------|--------|------------------|
-| **Structure** | Form | Section layout, repetition, phrase length, tension curve |
-| **Harmony** | Harmony | Key, scale, chord movement, modulation |
-| **Rhythm** | Rhythm | Density, pulse, syncopation, emphasis |
-| **Motif** | Melody | Recurrence, variation, transformation |
-| **Emotion** | Expression | Intended affect, energy curve, mood |
-| **Expression** | Dynamics | Velocity, articulation, timing |
+- current notes and timing
+- song form and section boundaries
+- harmony and key/scale context
+- rhythm and density
+- motifs and transformations
+- orchestration and track roles
+- manually authored vs generated material
+- instrument capabilities
+- user constraints and musical preferences
 
-### Forum Engine (BettaFish)
-
-**Purpose:** Multi-member deliberation and synthesis
-
-**Process:**
-1. **Collection** — Execute all specialists in parallel
-2. **Conflict Detection** — Score overlaps between proposals
-3. **Synthesis** — Priority-weighted merge of proposals
-4. **Plan Generation** — Output unified CompositionPlanIR
-
-**Output:** `CompositionPlanIR` — A complete, conflict-free composition plan
-
-### Simulation Engine (MiroFish)
-
-**Purpose:** Temporal state evolution
-
-**WorldState Variables:**
-
-| Variable | Range | Purpose |
-|----------|-------|---------|
-| `energyLevel` | 0-1 | Overall intensity |
-| `density` | 0-1 | Note density |
-| `harmonicTension` | 0-1 | Chord tension |
-| `motifFamiliarity` | 0-1 | Theme recognition |
-| `noveltyBudget` | 0-1 | Remaining novelty |
-| `grooveTightness` | 0-1 | Rhythmic precision |
-| `arrangementOccupancy` | 0-1 | Active voices ratio |
-| `emotionalVector` | [-1,1]² | Valence/Arousal |
-| `barIndex` | 0+ | Current position |
-| `phraseIndex` | 0+ | Current phrase |
-| `sectionIndex` | 0+ | Current section |
-| `tickInBar` | 0-3 | Quarter note position |
-
-**Output:** `SimulationTimeline` — Bar-by-bar event sequence
-
-### Counterpoint Engine
-
-**Purpose:** Voice-leading and species counterpoint validation
-
-**Technology:** TypeScript implementation of Koechlin voice-leading rules (`realization/` in the SDK)
-
-**Capabilities:**
-- 2-4 voice counterpoint validation
-- Hard/soft rule tiers with weighted scoring
-- Voice-leading repair suggestions
-- Modulation path planning
-
-### Ensemble Members (9)
-
-**Musical Ensemble:**
-
-| Member | Role | Triggers |
-|--------|------|----------|
-| **Kick** | Beat placement | Downbeats, groove |
-| **Bass** | Low-end foundation | Root motion, rhythm |
-| **HarmonyBed** | Chord voicing, pad | Harmonic changes |
-| **Lead** | Melodic content | Motif development |
-| **Counterline** | Counter-melody | Complementary motion |
-| **Texture** | Atmospheric elements | Density changes |
-
-**Meta Members:**
-
-| Member | Role | Monitors |
-|--------|------|----------|
-| **Listener** | Responds to density, surprise | WorldState |
-| **EnergyCtrl** | Manages energy curve | Energy trajectory |
-| **SectionGate** | Controls transitions | Section boundaries |
-
-### Renderer/Realizer
-
-**Purpose:** Convert simulation to musical representation
-
-**Components:**
-- **VoiceMapper** — Ensemble member → instrument slot mapping with priority and voice stealing
-- **MIDIRenderer** — Timeline → MIDI file
-- **AudioExporter** — MIDI → WAV/FLAC/MP3
-- **SheetMusicRenderer** — Timeline → MusicXML/PDF/LilyPond
-- **ExportCoordinator** — Orchestrates multi-format exports
+The current Song supplies live project truth. The model does not need to infer the project from conversation history.
 
 ---
 
-## Data Schemas
+## Theory-Aware Operations
 
-All schemas use Zod for runtime validation with TypeScript type inference.
+White Room's composition layer is built around explicit musical operations rather than unrestricted text generation.
 
-### Core Schemas
+Examples include:
 
-```typescript
-// Ensemble member output format
-SpecialistProposalSchema
+- rhythmic generation and transformation
+- density changes within song/section/track scope
+- motif development and variation
+- harmonic analysis and constrained reharmonization
+- counterpoint and voice-leading operations
+- orchestration changes
+- section and form operations
+- generated-note replacement while preserving manual material
 
-// Forum Engine output
-CompositionPlanIRSchema
+Schillinger-derived tools provide mathematical structure for rhythm, melody, harmony, orchestration, and form. Other music-theory and learned-domain methods can participate through the same state/tool boundary.
 
-// Simulation Engine output
-SimulationTimelineSchema
+---
 
-// State variables
-WorldStateSchema
+## Governed AI Assistance
 
-// Explainability log
-DecisionSchema
+AI assistance follows the White Room intelligence architecture documented in [System / Intelligence](../../system/intelligence/).
 
-// Accountability system
-FeatureRegistrySchema
+```text
+Model
+  |
+  v
+bounded tool request
+  |
+  v
+composition operation
+  |
+  v
+constraint + event validation
+  |
+  v
+Song state
 ```
 
+A request such as:
+
+> Make the chorus denser without changing its harmony.
+
+becomes a scoped operation:
+
+1. Resolve the chorus from current Song state.
+2. Preserve harmonic content as a constraint.
+3. Inspect current rhythmic density, voices, instrumentation, and note origins.
+4. Propose additional/modified generated material only where allowed.
+5. Validate timing, event identity, voice limits, and the harmonic constraint.
+6. Commit only the accepted change.
+
 ---
 
-## Integration Status (August 2026)
+## Manual Material Is Protected
 
-Honest current state: the TypeScript engine is **not called from the Swift app via FFI**.
+White Room distinguishes user-authored material from generated material.
 
+This allows operations such as density changes or regeneration to modify machine-generated content while preserving notes the musician intentionally placed.
+
+That distinction is central to making AI assistance collaborative rather than destructive.
+
+---
+
+## Determinism and Testing
+
+Where an operation can be deterministic, White Room makes it deterministic and seedable.
+
+Tests can verify:
+
+- expected notes are produced
+- required notes are not dropped
+- notes are not duplicated unexpectedly
+- event timing remains in bounds
+- transformations stay within the selected scope
+- preserved harmonic/form constraints remain true
+- serialization round-trips retain musical identity
+- mock and live engine paths agree at their contracts
+
+Generated output is therefore subject to the same engineering expectations as other product behavior.
+
+---
+
+## Relationship to the Engine
+
+The composition layer does not render audio directly.
+
+It produces/updates authoritative musical state that the `WhiteRoomEngine` abstraction realizes through the active engine implementation:
+
+```text
+Composition Engine
+       |
+       v
+      Song
+       |
+       v
+WhiteRoomEngine
+   |      |      |
+ Mock    Live   Remote
+          |       |
+         FFI   WebSocket
+          |       |
+          +--- C++20 DSP ---+
 ```
-Swift Frontend (SwiftUI)
-    +-- Native composition features (SharedAI agents, FunctionBridge)
-    |       maps musical functions to BettaFish actor *concepts* in pure Swift
-    +-- FFI --> C++20 DSP engine (XCFramework)  [the only FFI path]
 
-SDK (TypeScript, runs under Node/Vitest)
-    +-- BettaFish forum + MiroFish simulation + renderers
-    +-- Standalone: exercised by its own test suite, not by the shipping app
-```
-
-**Key Points:**
-- The Swift app's composition features are native Swift; `FunctionBridge` mirrors the BettaFish actor model but does not invoke the TypeScript engine
-- No Node/child-process bridge from the app to the TS engine exists today
-- Treat the agent-style simulation layers as active R&D, not fully integrated product architecture
+This separation keeps composition logic testable and prevents AI concerns from leaking into the real-time audio callback.
 
 ---
 
-## Design Principles
+## GSA Relationship
 
-1. **Determinism** — Same seed → identical output
-2. **Explainability** — Every decision traceable to members
-3. **Testability** — Comprehensive Vitest suite (component phases reported 100% pass rates at build time)
-4. **Streaming** — Real-time UI updates via events
-5. **Extensibility** — New members can be added easily
+White Room applies [GSA — Governed Stewardship Architecture](https://github.com/bretbouchard/gsa-system) in a deliberately lightweight creative form.
 
----
+The shared principles are:
 
-## Technology Stack
+- authoritative state outside the model
+- replaceable model processors
+- explicit capabilities/tools
+- preserved project intent and preferences
+- inspectable changes
+- validation before acceptance
 
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| Forum Engine | TypeScript + Zod | Multi-member deliberation |
-| Simulation Engine | TypeScript | Temporal state evolution |
-| Counterpoint | TypeScript + Koechlin rules | Voice-leading validation |
-| Testing | Vitest | Comprehensive suite |
-| Streaming | Node.js EventEmitter | Real-time updates |
-
----
-
-## Related Documentation
-
-- [Theory](../theory/) — Schillinger System mathematical foundation
-- [Songwriting](../songwriting/) — Creative application
-- [DSP](../../sound/dsp/) — Sound synthesis triggered by composition
-- [Frontend](../../system/frontend/) — Application layer with Room Architecture
+Unlike Volta, White Room does not need heavy engineering approval workflows for ordinary composition. The goal is fluid creative interaction while retaining strong state and execution boundaries.
