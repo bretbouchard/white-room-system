@@ -1,4 +1,4 @@
-# White Room System
+# White Room System Atlas
 
 **A theory-powered music composition environment with a real-time C++ audio engine, native Apple application stack, local ML, and governed AI operating against authoritative musical state.**
 
@@ -320,14 +320,14 @@ Kept private:
 
 ## Related projects
 
-### [GSA — Governed Stewardship Architecture](https://github.com/bretbouchard/gsa-system)
+### [GSA System Atlas — Governed Stewardship Architecture](https://github.com/bretbouchard/gsa-system)
 The general architecture used to keep models, state, evidence, capabilities and side effects separate.
 
-### [Volta System](https://github.com/bretbouchard/volta-system)
+### [Volta System Atlas](https://github.com/bretbouchard/volta-system)
 The same governed-system ideas applied to electronics design, where requirements and deterministic verification must survive all the way to manufacturing.
 
 ---
 
 ## Status
 
-White Room is under active development. This atlas should describe current implementation honestly and label experimental/planned capabilities rather than presenting them as shipped.
+White Room is under active development. This System Atlas should describe current implementation honestly and label experimental/planned capabilities rather than presenting them as shipped.
