@@ -1,244 +1,234 @@
-# BettaFish-MiroFish Intelligence Layer
+# White Room Intelligence
 
-> **Note:** This directory has been superseded. The composition engine documentation now lives in [Song / Engine](../../song/engine/). The system layer now covers [Frontend](../frontend/), [Network](../network/), and [ML](../ml/).
+White Room uses AI as a governed participant in a live musical system, not as the owner of the song.
 
-Multi-member generative composition system for White Room.
+The authoritative song, performance state, engine state, preferences, and executable capabilities remain outside the language model. Models receive only the context needed for the current task and act through explicit White Room tools.
 
----
-
-## Overview
-
-The Intelligence Layer transforms user intent into musical output through a sophisticated multi-member system:
-
-1. **Intent Interpretation** — Natural language or UI selection → structured intent
-2. **Musical Specialists** — Domain experts propose musical decisions
-3. **Forum Engine (BettaFish)** — Deliberation, conflict resolution, synthesis
-4. **Simulation Engine (MiroFish)** — Temporal state evolution
-5. **Ensemble Members** — Real-time musical decisions
-6. **Renderer/Realizer** — Simulation output to playable music
+This is the White Room application of [GSA — Governed Stewardship Architecture](https://github.com/bretbouchard/gsa-system).
 
 ---
 
-## Architecture
+## Runtime Model
 
-```
-User Intent
-    │
-    ▼
-┌─────────────────────────────────────┐
-│     Intent Interpretation Layer     │
-└─────────────────┬───────────────────┘
-                  │
-                  ▼
-┌─────────────────────────────────────┐
-│       Musical Specialists (6)       │
-│  Structure | Harmony | Rhythm       │
-│  Motif | Emotion | Expression       │
-└─────────────────┬───────────────────┘
-                  │ SpecialistProposal[]
-                  ▼
-┌─────────────────────────────────────┐
-│      Forum Engine (BettaFish)       │
-│  • Collection: Parallel execution   │
-│  • Conflict Detection: Overlap score│
-│  • Synthesis: Priority-weighted     │
-│  • Plan Generation: CompositionPlanIR│
-└─────────────────┬───────────────────┘
-                  │ CompositionPlanIR
-                  ▼
-┌─────────────────────────────────────┐
-│    Simulation Engine (MiroFish)     │
-│  • WorldState (12 variables)        │
-│  • Tick Loop: Bar → Phrase → Section│
-│  • Checkpoints: Branch/restore      │
-│  • Event Emission: SimulationTimeline│
-└─────────────────┬───────────────────┘
-                  │ SimulationTimeline
-                  ▼
-┌─────────────────────────────────────┐
-│        Ensemble Members (9)         │
-│  Bass | HarmonyBed | Lead           │
-│  Counterline | Texture              │
-│  Kick | Listener | EnergyCtrl        │
-│  SectionGate                        │
-└─────────────────┬───────────────────┘
-                  │
-                  │ EnsembleAction[]
-                  ▼
-┌─────────────────────────────────────┐
-│        Renderer/Realizer            │
-│  VoiceMapper → MIDI → Audio Export  │
-└─────────────────┬───────────────────┘
-                  │
-                  ▼
-         PatternIR / SongIR
+```text
+                    User intent
+                        |
+                        v
+              +-------------------+
+              | Current Song      |
+              | authoritative     |
+              | musical state     |
+              +---------+---------+
+                        |
+                controlled context
+                        |
+                        v
+              +-------------------+
+              | Model / Processor |
+              | Apple Foundation  |
+              | Models or other   |
+              | governed model    |
+              +---------+---------+
+                        |
+                 proposal/tool call
+                        |
+                        v
+              +-------------------+
+              | White Room Tools  |
+              | bounded musical   |
+              | capabilities      |
+              +---------+---------+
+                        |
+                        v
+              +-------------------+
+              | Validation        |
+              | structure, music, |
+              | engine invariants |
+              +---------+---------+
+                        |
+                        v
+              +-------------------+
+              | Song / Engine     |
+              | accepted mutation |
+              +-------------------+
 ```
 
----
-
-## Components
-
-### Musical Specialists (6)
-
-| Specialist | Domain | Responsibilities |
-|------------|--------|------------------|
-| **Structure** | Form | Section layout, repetition, phrase length, tension curve |
-| **Harmony** | Harmony | Key, scale, chord movement, modulation |
-| **Rhythm** | Rhythm | Density, pulse, syncopation, emphasis |
-| **Motif** | Melody | Recurrence, variation, transformation |
-| **Emotion** | Expression | Intended affect, energy curve, mood |
-| **Expression** | Dynamics | Velocity, articulation, timing |
-
-### Forum Engine (BettaFish)
-
-**Purpose:** Multi-member deliberation and synthesis
-
-**Process:**
-1. **Collection** — Execute all specialists in parallel
-2. **Conflict Detection** — Score overlaps between proposals
-3. **Synthesis** — Priority-weighted merge of proposals
-4. **Plan Generation** — Output unified CompositionPlanIR
-
-**Output:** `CompositionPlanIR` — A complete, conflict-free composition plan
-
-### Simulation Engine (MiroFish)
-
-**Purpose:** Temporal state evolution
-
-**WorldState Variables:**
-
-| Variable | Range | Purpose |
-|----------|-------|---------|
-| `energyLevel` | 0-1 | Overall intensity |
-| `density` | 0-1 | Note density |
-| `harmonicTension` | 0-1 | Chord tension |
-| `motifFamiliarity` | 0-1 | Theme recognition |
-| `noveltyBudget` | 0-1 | Remaining novelty |
-| `grooveTightness` | 0-1 | Rhythmic precision |
-| `arrangementOccupancy` | 0-1 | Active voices ratio |
-| `emotionalVector` | [-1,1]² | Valence/Arousal |
-| `barIndex` | 0+ | Current position |
-| `phraseIndex` | 0+ | Current phrase |
-| `sectionIndex` | 0+ | Current section |
-| `tickInBar` | 0-3 | Quarter note position |
-
-**Output:** `SimulationTimeline` — Bar-by-bar event sequence
-
-### Ensemble Members (9)
-
-**Musical Ensemble:**
-
-| Member | Role | Triggers |
-|--------|------|----------|
-| **Kick** | Beat placement | Downbeats, groove |
-| **Bass** | Low-end foundation | Root motion, rhythm |
-| **HarmonyBed** | Chord voicing, pad | Harmonic changes |
-| **Lead** | Melodic content | Motif development |
-| **Counterline** | Counter-melody | Complementary motion |
-| **Texture** | Atmospheric elements | Density changes |
-
-**Meta Members:**
-
-| Member | Role | Monitors |
-|--------|------|----------|
-| **Listener** | Responds to density, surprise | WorldState |
-| **EnergyCtrl** | Manages energy curve | Energy trajectory |
-| **SectionGate** | Controls transitions | Section boundaries |
-
-### Renderer/Realizer
-
-**Purpose:** Convert simulation to musical representation
-
-**Components:**
-- **VoiceMapper** — Ensemble member → instrument slot mapping with priority and voice stealing
-- **MIDIRenderer** — Timeline → MIDI file
-- **AudioExporter** — MIDI → WAV/FLAC/MP3
-- **SheetMusicRenderer** — Timeline → MusicXML/PDF/LilyPond
-- **ExportCoordinator** — Orchestrates multi-format exports
+A model can reason about the song and propose operations. It does not directly replace canonical song state or bypass engine contracts.
 
 ---
 
-## Data Schemas
+## AI v1 Composition
 
-All schemas use Zod for runtime validation with TypeScript type inference.
+The intended White Room AI runtime combines four things:
 
-### Core Schemas
+1. **A capable language/reasoning model** — Apple Foundation Models is the primary local Apple path; the surrounding contracts are designed so model implementations can change.
+2. **Music-domain expertise** — learned adapters and domain-specific musical knowledge provide specialized composition, performance, sound-design, and mixing behavior.
+3. **The current Song object** — the authoritative live musical/project context supplied to the model in controlled form.
+4. **White Room tools** — explicit executable capabilities for inspecting and changing composition, instruments, effects, automation, performance, and other governed state.
 
-```typescript
-// Ensemble member output format
-SpecialistProposalSchema
+The model is therefore one processor in a larger system rather than the application itself.
 
-// Forum Engine output
-CompositionPlanIRSchema
+---
 
-// Simulation Engine output
-SimulationTimelineSchema
+## Authoritative State
 
-// State variables
-WorldStateSchema
+White Room keeps truth in typed application state and engine state rather than conversational memory.
 
-// Explainability log
-DecisionSchema
+Examples include:
 
-// Accountability system
-FeatureRegistrySchema
+- notes, timing, sections, tracks, harmony, rhythm, form, and orchestration
+- instrument and preset assignments
+- mixer and effects state
+- automation and performance parameters
+- user-authored vs generated material
+- current engine capabilities
+- relevant user musical preferences and project intent
+
+A model may receive a projection of these objects. It does not become their source of truth.
+
+---
+
+## Tool Boundary
+
+AI-driven changes use the same conceptual boundary as other application changes:
+
+```text
+Model
+  |
+  | structured request
+  v
+White Room tool contract
+  |
+  v
+Policy / validation
+  |
+  v
+WhiteRoomEngine / Song operation
+  |
+  v
+Authoritative state mutation
+  |
+  v
+Verification
+  |
+  v
+Playable result
 ```
 
+Useful tools can include bounded operations such as:
+
+- inspect a section, track, harmonic region, or rhythmic pattern
+- add, move, transform, or remove generated musical events
+- change density or orchestration within explicit scope
+- choose or modify an instrument/preset
+- adjust mixer, effects, or automation values
+- ask theory/analysis services for structured findings
+- render or audition a proposed change
+
+Tool contracts are preferable to arbitrary code or shell access because they make scope, validation, side effects, and testing explicit.
+
 ---
 
-## Implementation
+## A Typical Governed Musical Change
 
-**Location:** `sdk/packages/core/src/` in main repository
+User request:
 
-**Subdirectories (actual):**
+> Make the chorus denser without changing its harmony.
+
+```text
+1. Read the current Song and identify the chorus.
+2. Preserve the existing harmonic structure as a hard constraint.
+3. Inspect current density, instrumentation, note origins, and available voices.
+4. Propose bounded rhythmic/orchestration changes.
+5. Apply those changes through White Room tools.
+6. Validate event integrity, timing, voice limits, and the preserved harmony constraint.
+7. Commit the accepted Song mutation.
+8. Play the result through the same engine used by the normal UI.
 ```
-├── schemas/bettafish/     # Zod schemas (Phase 33.1)
-├── bettafish/forum/       # Forum Engine (Phase 33.2)
-├── bettafish/simulation/  # Simulation Engine (Phase 33.3)
-├── bettafish/agents/      # Ensemble agents
-├── bettafish/actors/      # Ensemble actors
-└── renderer/              # Renderer/Realizer
+
+The important distinction is that the model does not regenerate an opaque song document. It operates against structured state through controlled capabilities.
+
+---
+
+## Failure Is Data
+
+White Room's AI path follows the same testing philosophy as the rest of the system: generated output is not accepted because it sounds plausible in prose.
+
+For example:
+
+```text
+requested transformation
+        |
+        v
+generated event operations
+        |
+        v
+music / structure validation
+        |
+      FAILED
+        |
+        v
+diagnose invalid, dropped, duplicated, or out-of-range events
+        |
+        v
+revised operations
+        |
+        v
+validation rerun
+        |
+      PASSED
 ```
 
-**Technology Stack:**
-- TypeScript 5.3+
-- Zod 3.22+ (runtime validation)
-- Vitest 1.0+ (comprehensive suite; component phases reported 100% pass rates at build time)
-- Node.js EventEmitter (streaming)
+Where expected musical events are known, tests can verify that notes were not dropped, duplicated, moved outside the requested scope, or changed contrary to constraints.
 
 ---
 
-## UI Introspection (Phase 33.5)
+## Local Intelligence
 
-Users can observe and understand the intelligence layer:
+White Room is designed to take advantage of Apple's on-device intelligence stack where it is appropriate, including Foundation Models on supported operating systems and hardware.
 
-- **Timeline View** — Bar-by-bar state evolution
-- **Energy/Tension Overlay** — Visual curves on timeline
-- **Ensemble Contribution Panel** — Per-decision breakdown
-- **Rationale Inspector** — "Why did this happen?" queries
-- **State Graph** — Visual state machine
-- **Traceability Interface** — Full provenance tracking
+On-device reasoning is attractive for White Room because:
 
----
+- the Song object can remain local
+- latency is predictable
+- there is no per-request cloud cost
+- musical/project context does not need to be uploaded merely to make routine changes
+- tools still enforce the same application contracts regardless of model source
 
-## Design Principles
-
-1. **Determinism** — Same seed → identical output
-2. **Explainability** — Every decision traceable to members
-3. **Testability** — Comprehensive Vitest suite
-4. **Streaming** — Real-time UI updates via events
-5. **Extensibility** — New members can be added easily
+The architecture does not require every intelligence capability to use the same provider. Models remain replaceable processors behind stable application contracts.
 
 ---
 
-## Related Documentation
+## Relationship to GSA
 
-- [Composition Engine](../../song/engine/) — BettaFish-MiroFish layer (Song pillar)
-- [Theory](../../song/theory/) — Schillinger System mathematical foundation
-- [DSP](../../sound/dsp/) — Sound synthesis triggered by composition
-- [ML](../ml/) — Machine learning assistance
+White Room intentionally uses a lighter GSA profile than engineering domains such as Volta.
+
+The same general rules still apply:
+
+- reality/state is owned outside the model
+- models receive controlled projections
+- actions happen through explicit capabilities
+- important output is testable and inspectable
+- durable preferences and project intent belong in application memory/state, not a prompt transcript
+
+White Room emphasizes fluid creative interaction rather than heavyweight planning. GSA provides the safety and state boundary without turning music-making into project-management UI.
 
 ---
 
-*BettaFish-MiroFish Intelligence Layer*
-*Part of the System pillar*
+## What This Demonstrates
+
+White Room's intelligence layer sits inside a larger production system spanning:
+
+- Swift application architecture
+- C++20 real-time DSP
+- a single controlled Swift/C++ FFI boundary
+- Core ML and local ML inference
+- Apple Foundation Models integration direction
+- typed Song and performance state
+- deterministic mock/live engine abstractions
+- tool-driven agent interaction
+- multi-platform Apple UI
+- real-time audio constraints
+- automated unit, integration, and end-to-end testing
+
+That combination is deliberate: the AI system has to operate against a real product and real-time engine rather than a standalone chat demo.
