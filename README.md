@@ -1,661 +1,333 @@
 # White Room System
 
-Architecture documentation for **White Room** -- a theory-powered music composition environment.
+**A theory-powered music composition environment with a real-time C++ audio engine, native Apple application stack, local ML, and governed AI operating against authoritative musical state.**
+
+White Room is a music-writing and performance system built around a simple idea: the musician should stay inside the song while composition, theory, instruments, effects, mixing, and intelligent assistance remain available around them.
+
+This repository is the public **System Atlas** for a private implementation. It documents the architecture, engineering boundaries, technology choices, and current product direction without publishing proprietary source code.
 
 ---
 
-## The Concept
+## Why this system is interesting
 
-Hundreds of years ago, composing began in silence.
-You sat in a quiet room. Every tool within reach. A blank sheet of staff paper waiting for the first mark.
+White Room is not an AI chat interface wrapped around a DAW.
 
-White Room is that room -- rebuilt for today.
+It combines several systems that normally live separately:
 
-A canvas with depth. Instruments, effects, and theory surrounding you.
-Present when needed. Invisible when not.
+- structured song/composition state
+- mathematical music-theory tooling
+- real-time synthesis and DSP
+- instruments, effects, modelers, and mixing
+- Swift / SwiftUI application architecture
+- C++20 real-time audio
+- a controlled Swift ↔ C++ FFI boundary
+- Core ML and local inference
+- multi-platform Apple UI
+- local and remote engine implementations
+- governed model/tool interaction
 
-<br>
-
-<div align="center">
-*In the white room with black curtains, near the station...*
-
-<sub>Pete Brown, "White Room" (Cream, 1968)</sub>
-</div>
-
-<br>
-
----
-
-## What This Is
-
-This is a **System Atlas** -- public architecture documentation for a private codebase.
-
-It is intended to describe the current product and codebase honestly. When a
-capability is still experimental, partially integrated, or planned, this atlas
-should say so explicitly rather than presenting it as already shipped.
-
-- **What's here**: Architecture, design decisions, patterns, technology choices
-- **What's not here**: Source code, algorithms, presets, implementation details
-
-### Why This Exists
-
-I'm Bret Bouchard. I've been building White Room for 3+ years as a solo developer. This System Atlas documents the architecture for:
-
-- **Hiring managers** -- See the engineering behind the product
-- **Potential collaborators** -- Understand the architecture before conversations
-- **Future me** -- Document decisions while I still remember why I made them
-
-### Beta Access
-
-If you want TestFlight access to White Room or VoiceSynth, email
-`bretbouchard@gmail.com` with:
-
-- the platform you want to test (`iPhone/iPad`, `Apple TV`, or `Mac`)
-- your TestFlight Apple ID email if it differs from your contact address
-- the host app you want to use for VoiceSynth AUv3
-- the device and OS version you plan to test on
-
-Current distribution note as of August 5, 2026:
-
-- iOS, tvOS, and macOS builds share one App Store Connect app record
-- VoiceSynth AUv3 is delivered through a host app, not a standalone TestFlight app
-- the current macOS app does not yet embed the VoiceSynth AUv3 extension
+The AI layer must work against the same real product state and engine contracts as the rest of the application.
 
 ---
 
-## Three Pillars
+## Three pillars
 
-White Room is organized into three pillars: **Song**, **Sound**, and **System**.
+White Room is organized into **Song**, **Sound**, and **System**.
 
-### Conceptual Flow
-
+```text
+SYSTEM
+application, engine abstraction, ML, networking
+        |
+        v
+SONG
+composition, theory, form, musical state
+        |
+        v
+SOUND
+instruments, effects, modelers, mixer, audio
 ```
-SYSTEM (Packaging)
-    |
-    v
-SONG (Composition)
-    |
-    v
-SOUND (Audio)
-```
 
-### Current Engine Data Flow
+### [Song](./song/)
 
-```
+The composition layer.
+
+- Schillinger-derived theory and reactive analysis
+- piano roll, step sequencer, staff, and drum workflows
+- typed Song / Performance separation
+- density, form, harmony, rhythm, motif, and orchestration operations
+- preservation of user-authored vs generated material
+- governed AI assistance through structured composition tools
+
+### [Sound](./sound/)
+
+The real-time audio layer.
+
+- C++20 Sound Substrate
+- 30+ instruments across multiple synthesis families
+- 28 effect pedals
+- physical, modal, spectral, granular, FM, additive, wavetable/VA, sample, neural and other synthesis/modeling paths
+- ISoundModeler abstraction for amp, cabinet, room, console, tape, transformer, filter, physical-instrument, performance and neural processing
+- 16-channel mixer with Console-style bus processing
+
+### [System](./system/)
+
+The application and integration layer.
+
+- Swift / SwiftUI app architecture
+- WhiteRoomKit engine abstraction
+- Live, Mock, and Remote engine paths
+- C++ FFI and WebSocket transports behind stable application contracts
+- Core ML / DDSP voice pipeline
+- local intelligence and Apple Foundation Models direction
+- iOS, iPadOS, macOS, tvOS and related Apple-platform work
+
+---
+
+## Current engine boundary
+
+The UI and AI layers do not directly own the DSP engine.
+
+```text
 Swift Frontend
-    |
-    +-- WhiteRoomEngine protocol (11 sub-APIs)
-    |       |
-    |       +-- LiveEngine (.live) -- FFI --> C++20 DSP
-    |       +-- MockEngine (.mock) -- Deterministic stubs
-    |       +-- RemoteEngine -- WebSocket --> Pi 5 Engine path in active development
-    |
-    +-- Shared AI / analysis services
-    |       |
-    |       +-- On-device composition and analysis features
-    |       +-- Voice / DDSP Core ML pipeline
-    |       +-- Some cloud-oriented clients and WebSocket integrations remain in repo
-    |
-    +-- FFI --> DSP (C++20)
+     |
+     v
+WhiteRoomEngine protocol
+     |
+ +---+-------------------+
+ |                       |
+ v                       v
+MockEngine            LiveEngine
+ deterministic           |
+ tests/previews           v
+                    Swift/C++ FFI
+                          |
+                          v
+                    C++20 Engine
+                          |
+                          v
+               instruments / DSP / mixer
 ```
+
+A RemoteEngine path uses the same conceptual application boundary while transporting commands/state over the network.
+
+This separation makes UI, composition and AI work testable without putting model or application concerns inside the real-time render callback.
 
 ---
 
-## [Song](./song/)
-Your composition. Theory, engine, and craft combined.
+## Governed intelligence
 
-- **[Theory](./song/theory/)** -- Schillinger System
-  - Rhythm resultants and interference patterns
-  - Melodic contour and motivic development
-  - Harmonic progressions and voice leading
-  - Orchestration and form
+White Room applies [GSA — Governed Stewardship Architecture](https://github.com/bretbouchard/gsa-system) in a deliberately lightweight creative form.
 
-- **[Composition Engine](./song/engine/)** -- Composition and reasoning layer
-  - White Room includes shipped composition tooling and theory-aware generation
-  - BettaFish / MiroFish concepts still appear in plans, experiments, and some UI copy
-  - Those agent-style simulation layers should be treated as active R&D, not as fully integrated product architecture
+The central rule is:
 
-- **[Songwriting](./song/songwriting/)** -- Creative Application
-  - Song structure and arrangement
-  - Hook construction
-  - Emotional arc design
+> **The Song is authoritative. The model is a processor.**
 
-## [Sound](./sound/)
-Your instruments, effects, and mix. DSP, modelers, and routing combined.
+The intended AI runtime combines:
 
-- **[DSP](./sound/dsp/)** -- Sound Substrate
-  - DSP-first architecture (minimal JUCE dependencies: 7 kept, 2 removed)
-  - 30+ instruments across 16 synthesizer families, samplers, orchestral, keys, and drums
-  - 28 effect pedals
-  - 10+ synthesis engines: FM, Wavetable/VA, Additive, Granular, Physical Modeling, Spectral, DDSP, Chaos, Modal, Sample-based
+1. **A reasoning model** — Apple Foundation Models is the primary local Apple path; model implementations remain replaceable.
+2. **Music-domain expertise** — learned adapters and structured domain knowledge.
+3. **The current Song** — authoritative live project context.
+4. **White Room tools** — bounded executable capabilities for composition, performance, sound, mix and analysis.
 
-- **[Modelers](./sound/modelers/)** -- ISoundModeler System
-  - Generic modeler framework (ISoundModeler interface, 10 modeler kinds)
-  - AmpCaptureModeler (NAM Core v0.5.2 neural amp simulation)
-  - CabinetIR, RoomIR (partitioned convolution)
-  - ConsoleModeler (analog summing encode/decode)
-  - TapeModeler, TransformerModeler (analog color)
-  - CircuitFilterModeler (ZDF analog filters)
-  - PhysicalInstrumentModeler (Karplus-Strong+, modal resonators)
-  - PerformanceModeler (seeded control curves)
-  - NeuralFXModeler (ONNX/RTNeural)
-  - Tone3000 community integration, metadata catalog, preview/comparison
+```text
+User intent
+    |
+    v
+Current Song / project state
+    |
+    | controlled context
+    v
+Model + music-domain reasoning
+    |
+    | structured tool request
+    v
+White Room tool
+    |
+    v
+Validation / engine contract
+    |
+    v
+Accepted state mutation
+    |
+    v
+Playable result
+```
 
-- **[Mixing](./sound/mixing/)** -- ConsoleX Mixer Architecture
-  - 16-channel mixer with per-channel EQ, compression, gate, saturation
-  - Airwindows Console bus processing
-  - Bus routing (aux, groups, master)
-  - SoundModelerChain integration (modelers in the signal path)
-  - Effect chains and pedal ordering
+The model does not replace the Song document, silently become long-term application memory, or bypass executable contracts.
 
-## [System](./system/)
-The packaging layer. Frontend, engine kit, network, and ML combined.
-
-- **[WhiteRoomKit](./system/white_room_kit/)** -- Engine Package
-  - Standalone Swift Package (zero FFI, zero SwiftUI)
-  - SongModels, SongAlgorithm enrichment, StateVector (16D)
-  - WhiteRoomEngine protocol with 11 sub-APIs
-  - LiveEngine (.live FFI) and MockEngine (.mock testing)
-  - AppTheme protocol (WhiteRoomTheme)
-  - White Room's engine layer -- pure Swift, fully testable
-
-- **[Frontend](./system/frontend/)** -- White Room Application Layer
-  - SwiftUI interface across iOS, iPadOS, macOS, and tvOS
-  - Room Architecture: 3-area navigation (Song / Ensemble / Mix)
-  - WhiteRoomEngine protocol via WhiteRoomKit
-  - XCFramework integration with C++ DSP engine
-
-- **[Network](./system/network/)** -- Pi 5 Network Engine
-  - Headless network-attached synth engine architecture for Raspberry Pi 5
-  - Substantial WebSocket, discovery, and Pipewire code exists in the repo
-  - End-to-end product qualification and release hardening are still in progress
-
-- **[ML](./system/ml/)** -- Machine Learning
-  - Core ML voice synthesis (DDSP)
-  - Composition assistance and analysis features
-  - Primarily on-device inference, with some cloud-oriented integrations still present in the codebase
+See [System / Intelligence](./system/intelligence/) for the detailed architecture.
 
 ---
 
-## Architecture
+## Example AI-assisted change
 
-### Engine Architecture
+A request such as:
 
-White Room consumes its engine through WhiteRoomKit -- a standalone Swift Package that abstracts local FFI, remote WebSocket, and mock testing behind a single protocol.
+> **Make the chorus denser without changing its harmony.**
 
-```
-+-------------------------------+
-|  WHITE ROOM APP               |
-|  WhiteRoomTheme (neon studio) |
-|  Composition workspace        |
-|  Room Architecture            |
-+---------------+---------------+
-                |
-                +-------- WhiteRoomKit -----------+
-                         |  SongModels            |
-                         |  WhiteRoomEngine       |
-                         |  SongAlgorithm         |
-                         |  StateVector (16D)     |
-                         |  DSPTypes              |
-                         |  AppTheme protocol     |
-                         +----+-------------+-----+
-                              |             |
-                     LiveEngine(.live)  MockEngine(.mock)
-                         (FFI)          (testing)
-```
+can become a constrained system operation:
 
-### Dual-Engine Transport
-
-White Room connects to the C++ engine through WhiteRoomKit's protocol layer. The WhiteRoomEngine protocol abstracts local vs remote -- the UI never knows which engine is active.
-
-```
-iPad / iPhone / Mac / Apple TV            Pi 5 / CM5
-+-------------------------------+     +-------------------------------+
-|  SwiftUI UI                   |     |  WebSocket Control Server     |
-|  Room Architecture            |     |  (JSON commands + state push) |
-|  ViewModels                   |<--->|  Protocol v1.0                |
-|                               |     |                               |
-|  WhiteRoomEngine protocol     |     |  White Room Engine (C++)      |
-|   +-- LiveEngine (FFI) ------+--+  |  +---------------------------+|
-|   +-- MockEngine (testing)   |  |  |  | Sound Substrate (C++20)  ||
-|   +-- Remote (WebSocket) ----+  |  |  | HouseBand Engine         ||
-|                               |  +->|  | 30+ Instruments          ||
-|  SongStateConverter           |     |  | 28 Effect Pedals         ||
-|  (produces identical JSON     |     |  | ISoundModeler System     ||
-|   for all paths)              |     |  | 16ch Mixer + Console     ||
-+-------------------------------+     |  +---------------------------+|
-                                      |                               |
-                                      |  Pipewire (sole audio infra)  |
-                                      |  +- JACK client compat        |
-                                      |  +- AES67/RTP network out     |
-                                      |  +- ALSA MIDI bridge          |
-                                      |  +- Graph-based routing       |
-                                      |                               |
-                                      |  Buildroot system image       |
-                                      |  +- Read-only rootfs          |
-                                      |  +- PREEMPT_RT kernel         |
-                                      |  +- CPU isolation (cores 2,3) |
-                                      |  +- A/B partition + OTA       |
-                                      +-------------------------------+
+```text
+resolve chorus from current Song
+        |
+preserve harmony as constraint
+        |
+inspect density, instrumentation and note origins
+        |
+propose bounded generated-event changes
+        |
+apply through composition tools
+        |
+validate event integrity + preserved constraints
+        |
+accept mutation
+        |
+play through WhiteRoomEngine
 ```
 
-### Room Architecture
-
-The White Room UI is organized into three areas. Users never leave the song to access other tools.
-
-```
-+--------------------------------------------------+
-|  SONG AREA (default, full screen)                |
-|  +- Piano Roll / Step Sequencer / Staff / Drums  |
-|  +- Schillinger Overlay Lenses                   |
-|  +- Density Curves                               |
-|  +- Ambient Info Bubbles                         |
-|  +- Transport with Section Ruler                 |
-|                                                   |
-|  [Ensemble Panel <]---- slides in from right      |
-|  [Mix Panel <]-------- slides in from right       |
-+--------------------------------------------------+
-```
-
-- **Song**: Full workspace. Piano roll, step sequencer, staff notation, drum pads. Schillinger analysis runs continuously with color-coded overlay lenses.
-- **Ensemble**: Slide-in panel. Instrument selection, presets, deep editors per instrument type, modulation matrix.
-- **Mix**: Slide-in panel. 16-channel mixer with ConsoleX bus processing, effect chains, sound modeler chains, AI mix coaching.
-
-Platform adaptations:
-- **iPad**: Panels slide from right, Song compresses but stays visible
-- **iPhone**: Full-width sheet presentation
-- **Mac**: Resizable side panels
-- **Apple TV**: Transport-focused remote control (10-foot UI, Siri Remote)
-
-### Information Flow
-
-```
-User taps Play
-  -> WhiteRoomEngine.transport.play()
-    -> [LiveEngine] wr_houseband_play() via FFI -> HouseBand::play() [C++]
-    -> [MockEngine] Deterministic stub -> test assertion
-    -> [RemoteEngine] WebSocket command -> Pi server -> HouseBand::play() [C++]
-        -> TransportState::start()
-        -> ProjectionEngine::render()
-          -> SongBridge -> HouseBandBridgeEngine
-            -> AudioGraph::processBlock()
-              -> VoiceAllocator::allocate()
-              -> SynthesisModules::render()
-            -> SoundModelerChain (AmpCapture -> CabinetIR -> Console)
-            -> 16-channel mixer (EQ/comp/gate/sat + Console bus)
-          -> Audio buffer
-            -> [Local] AVAudioEngine -> Speakers
-            -> [Remote] Pipewire -> Network audio (AES67/RTP)
-```
+If generated events are missing, duplicated, outside scope, or violate the requested harmonic constraint, the operation fails validation and is revised rather than accepted because the model sounded confident.
 
 ---
 
 ## WhiteRoomKit
 
-White Room's engine package -- a standalone Swift Package that provides the full engine abstraction layer.
+WhiteRoomKit is the Swift-side engine abstraction.
 
-**Zero FFI. Zero SwiftUI. Pure Swift.**
+Its purpose is to give the application one typed interface to musical state and executable engine capabilities while allowing the implementation behind it to change.
 
-### Package Structure
+Key characteristics include:
 
-| Module | Purpose |
-|--------|---------|
-| SongModels | Core data models (SongDNA, FullSong, PerformanceParams, FormModel, HarmonyModel, RhythmModel, PitchModel, OrchestrationModel) |
-| SongAlgorithm | Enriched song data (MotifDNA, HarmonicField, RhythmicIdentity, SpectralProfile, SpatialIdentity, RoleMap, TransformationLog, TensionReleaseCurve, DependencyGraph) |
-| WhiteRoomEngine | Root protocol with 11 sub-APIs (Transport, Mixer, Schillinger, Effects, Sampler, Sequencer, SongState, Pedalboard, Automation, DomainKnowledge, Modeler) |
-| StateVector | 16D psychoacoustic state math (SIMD16<Float>) with NaN guards, clamped to [0,1], fully immutable |
-| DSPTypes | Parameter metadata, pedal types, modeler kinds, CPU classifications |
-| AppTheme | Protocol for app theming (WhiteRoomTheme) |
+- typed Song and performance models
+- `WhiteRoomEngine` protocol with domain-specific APIs
+- deterministic `MockEngine` for tests and previews
+- `LiveEngine` for the production C++ path
+- remote transport behind the same conceptual contract
+- serializable/versioned state models
+- separation between application models and real-time implementation details
 
-### Engine Implementations
-
-- **LiveEngine** (`.live`) -- Real C++ backend via FFI. Production use.
-- **MockEngine** (`.mock`) -- Deterministic stubs. Testing, previews, SwiftUI Previews.
-
-Swap implementations without code changes.
-
-### Design Rules
-
-1. Zero FFI -- No `@_silgen_name` declarations
-2. Zero SwiftUI -- No view imports. Engine-only.
-3. Leaf Package -- No local package dependencies. Stands alone.
-4. Backward Compatible -- All enrichment fields optional with sensible defaults
-5. Codable Everything -- All models serialize/deserialize with version fields
-6. Immutable Models -- StateVector and core models use `let` properties with copy-on-write semantics
+This is a major reason AI assistance can operate against normal application capabilities rather than becoming a special privileged execution path.
 
 ---
 
-## Instrument Canon
+## Real-time audio engineering
 
-### Synthesizers (16)
-Nexsynth (FM), Kane (Wavetable/VA), Aether (Additive+Granular), LocalGal (Hybrid), String (Additive), Breath/BreathLead (Physical model), Growl (Chaos+Additive), Choral/ChoirV2 (Spectral), Motion (Granular), Nature (Sample+Granular), Giants (Additive), MajorModulator (Modulation), CDC4046 (PLL), VoiceSynth (DDSP+ML)
+The Sound layer is built around hard real-time constraints.
 
-### Samplers and Orchestral
-SamSampler (DDSP+Samples), Orchestral (12 winds/brass/perc), Keys (Piano, Rhodes, Rhodes3D), Drums (4 variants)
+Important rules include:
 
-### Effect Pedals (28)
-Reverb, Delay, Chorus, Flanger, Phaser, EQ, Compression, Gate, Saturation, Distortion, and more -- all running through Airwindows Console bus processing.
+- no heap allocation on the audio thread
+- no blocking work in the render callback
+- bounded execution per audio buffer
+- lock-free queues for time-critical control/event flow
+- expensive inference and planning stay outside real-time rendering
+- safe fallback paths where ML/model resources are unavailable
+
+The system includes a broad instrument and effect estate, but those private implementations are intentionally not reproduced in this public repository.
+
+See [Sound / DSP](./sound/dsp/) and [Sound / Modelers](./sound/modelers/) for the architectural atlas.
 
 ---
 
-## Sound Modeler System
+## Local ML and VoiceSynth
 
-### ISoundModeler Interface
+White Room contains a real-time voice/ML path built around Core ML and C++ DDSP processing.
 
-Every modeler implements the same abstract interface, making them interchangeable at runtime:
+The documented architecture includes:
 
-```
-ISoundModeler (abstract base)
-  +- prepare()  process()  reset()
-  +- latencySamples()  kind()  cpuClass()
-```
-
-### Modeler Types (10 Kinds)
-
-| Kind | Modeler | Description |
-|------|---------|-------------|
-| AmpCapture | AmpCaptureModeler | Neural amp simulation via NAM Core v0.5.2 |
-| CabinetIR | CabinetIRModeler | Speaker/microphone impulse response convolution |
-| RoomIR | RoomIRModeler | Room/space convolution reverb with predelay |
-| Console | ConsoleModeler | Analog console summing (encode/decode stages) |
-| Tape | TapeModeler | Tape saturation + HF rolloff |
-| Transformer | TransformerModeler | Preamp/output transformer character |
-| CircuitFilter | CircuitFilterModeler | ZDF ladder, SVF, OTA analog filter models |
-| PhysicalInstrument | PhysicalInstrumentModeler | Plucked strings, modal resonators, drum membranes |
-| Performance | PerformanceModeler | Seeded deterministic timing/velocity control curves |
-| NeuralFX | NeuralFXModeler | Generic neural FX via ONNX/RTNeural |
-
-### SoundModelerChain
-
-The chain processor manages ordered modeler instances:
-
-```
-Input --> [Modeler 1] --> [Modeler 2] --> [Modeler 3]
-          AmpCapture     CabinetIR       RoomIR
-          (NAM Core)     (Convolution)   (Convolution)
+```text
+text / phoneme conditioning
+        |
+Core ML model pipeline
+        |
+Swift inference scheduling
+        |
+controlled FFI
+        |
+C++ DDSP / render buffers
+        |
+AudioGraph
 ```
 
-Key behaviors:
-- **Ping-pong scratch buffers** prevent aliasing artifacts when 3+ modelers chain together
-- **Single-modeler fast path** bypasses scratch buffers for efficiency
-- **Per-modeler bypass** with zero-latency passthrough
-- **Background loading** via atomic swap -- zero audio dropouts during hot-swap
-- **Wet/dry mix** per modeler with delay-compensated dry signal
+The design includes DSP fallback when model loading fails, thermal-aware inference scheduling, cached/offline rendering paths, and render-thread isolation from ML work.
 
-### CPU Classification
-
-| Class | Description | Devices |
-|-------|-------------|---------|
-| Cheap | Runs everywhere, every channel | All |
-| Moderate | Reasonable CPU, limited instances | All |
-| High | Significant CPU, 1-2 instances | iOS/Mac/Pi (not tvOS) |
-| Extreme | Maximum quality, desktop/Pi only | Mac/Pi only |
-
-### Tone3000 Community Integration
-
-In-app browsing of the Tone3000 NAM model and IR ecosystem. Downloaded captures auto-import with community tags and ratings. Cloud sync via iCloud KVS. Offline mode for previously downloaded captures.
-
-### Metadata Catalog
-
-Every modeler file gets a unified `ModelerMetadata` entry with auto-tagging from NAM JSON metadata, WAV/AIFF headers, filename analysis, and format detection. Inverted index supports sub-100ms search across 500+ captures.
+See [System / ML](./system/ml/) for the detailed pipeline.
 
 ---
 
-## Pi 5 Network Engine
+## Testing philosophy
 
-### Architecture
+White Room treats generated behavior as product behavior.
 
-The Pi 5 runs as a headless network-attached synth engine. No screen, no keyboard, no DAC. Digital audio over Ethernet. Controlled from any Apple device.
+Testing is therefore not limited to whether an LLM returns syntactically valid text. Depending on the subsystem, tests can assert things such as:
 
-```
-Engine (C++) -> Pipewire client -> Pipewire graph
-                                      |
-                            +---------+----------+
-                            |                    |
-                      Network audio          Pipewire MIDI
-                      (AES67/RTP)        (native ALSA bridge)
-```
+- expected musical events are present
+- notes are not dropped or duplicated
+- operations stay within requested scope
+- manual material remains preserved
+- serialization round-trips retain identity
+- engine protocols behave consistently across mock/live boundaries
+- DSP obeys real-time constraints
+- model-loading failures degrade safely
+- UI and end-to-end product flows continue to work
 
-### Technical Specifications
-
-| Parameter | Value |
-|-----------|-------|
-| Platform | Pi 5 / CM5 (BCM2712, Cortex-A76 quad-core @ 2.4GHz) |
-| SIMD | NEON 128-bit |
-| Voices | 256-512 (16 channels x 16-32 voices) |
-| Mixer | 16-channel with per-channel EQ/comp/gate/sat + Console bus |
-| Audio output | Network only (AES67/RTP via Pipewire) |
-| Audio infrastructure | Pipewire (sole daemon) |
-| Latency (one-way) | < 10ms over Ethernet |
-| Control | WebSocket JSON + binary song transfer |
-| MIDI | Pipewire ALSA MIDI bridge (USB controllers) |
-| CPU isolation | Cores 2,3 for audio; cores 0,1 for system + network |
-| Kernel | PREEMPT_RT (mainline 6.12+) |
-| System image | Buildroot, read-only squashfs + tmpfs overlay |
-| Boot time | < 8 seconds to audio-ready |
-| Crash recovery | Hardware watchdog + systemd, restart within 5s |
-| Deployment | Docker cross-compile -> scp -> systemd restart (< 60s cycle) |
-
-### Cross-Compilation
-
-```
-macOS (development host)
-+-------------------------------+
-|  Docker container              |
-|  (debian:bookworm-slim)        |
-|  +- gcc-aarch64-linux-gnu      |
-|  +- Debian Bookworm sysroot    |
-|  +- CMake + ninja              |
-|                                |
-|  Output: white-room-engine     |
-|  (aarch64 ELF binary)          |
-+----------+--------------------+
-           | scp / rsync
-           v
-+-------------------------------+
-|  Pi 5 (target)                 |
-|  +- Binary dropped in place    |
-|  +- systemd restarts service   |
-+-------------------------------+
-```
-
-### JUCE Dependency
-
-The C++ engine retains 7 JUCE modules and removes 2:
-
-| Module | Status | Reason |
-|--------|--------|--------|
-| `juce_audio_devices` | Removed | Replaced by Pipewire |
-| `juce_audio_utils` | Removed | GUI/audio utilities not needed |
-| `juce_audio_basics` | Kept | `AudioBuffer<float>`, `MidiBuffer` throughout DSP |
-| `juce_core` | Kept | `String`, `CriticalSection`, threading, containers |
-| `juce_dsp` | Kept | DSP module abstractions for effect pedals |
-| `juce_audio_processors` | Kept | Base class for instrument hierarchy (25+ files) |
-| `juce_data_structures` | Kept | `UndoManager`, `ValueTree` for state management |
-| `juce_audio_formats` | Kept | `AudioFormatManager` for sample loading |
-| `juce_events` | Kept | Message thread, timers |
+The goal is **no vibes-based acceptance**: where the system can know what correct behavior is, it should test it.
 
 ---
 
-## Technology Stack
+## What this public atlas demonstrates
 
-| Pillar | Layer | Technologies |
-|--------|-------|-------------|
-| Song | Theory | Swift, Schillinger algorithms |
-| Song | Engine (Forum/Sim) | TypeScript, Zod, Vitest |
-| Song | Engine (Counterpoint) | Python, Koechlin system |
-| Song | Songwriting | Swift |
-| Sound | DSP | Pure C++20, DDSP, Core ML, real-time audio |
-| Sound | Modelers | C++20, NAM Core, partitioned convolution, ONNX/RTNeural |
-| Sound | Mixing | SwiftUI, Combine, AUv3 hosting |
-| System | WhiteRoomKit | Swift Package, zero FFI, zero SwiftUI |
-| System | Frontend | Swift, SwiftUI, Combine, XCFramework |
-| System | Network | C++ (libwebsockets), Pipewire, Buildroot |
-| System | ML | Core ML, Python, DDSP voice models |
+For an engineer evaluating the project, White Room is an example of integrating AI into a large stateful native application rather than building an isolated model demo.
 
----
+It spans:
 
-## Platform Strategy
-
-Designed under the strictest constraints.
-
-White Room was engineered to run on platforms that do not allow external audio plugins (starting with Apple TV). This forced the system to contain its entire synthesis, effects, and composition engine internally.
-
-That decision produced a portable architecture where every instrument and effect is part of the core engine rather than an external dependency.
-
-The result is a system that runs consistently across:
-
-**Apple platforms:**
-iOS, iPadOS, macOS, tvOS, visionOS
-
-**Desktop platforms:**
-Windows, Linux
-
-**Plugin formats:**
-AUv3, VST3, CLAP, LV2
-
-**Network engine:**
-Raspberry Pi 5 / Compute Module 5
-
-By removing external dependencies, White Room ensures consistent sound, deterministic playback, and seamless cross-platform portability.
+| Area | Representative architecture |
+|---|---|
+| Agentic AI | governed context + explicit tools + authoritative state |
+| Native application | Swift, SwiftUI, typed application models |
+| Systems integration | Swift ↔ C++ FFI, protocol abstraction |
+| Real-time systems | C++20 DSP, lock-free audio/control boundaries |
+| ML | Core ML, DDSP, local inference and fallbacks |
+| Music domain | theory, composition, instruments, effects, mixer |
+| Testing | deterministic mocks, music-specific assertions, E2E flows |
+| Networking | remote engine/WebSocket architecture |
+| Platforms | iOS/iPadOS/macOS/tvOS-oriented architecture |
 
 ---
 
-## Component Catalog
+## Public vs private
 
-### WhiteRoomKit (Swift Package)
+This repository intentionally contains architecture documentation rather than the production implementation.
 
-| Component | Purpose |
-|-----------|---------|
-| WhiteRoomEngine | Root protocol with 11 sub-APIs (Transport, Mixer, Schillinger, Effects, Sampler, Sequencer, SongState, Pedalboard, Automation, DomainKnowledge, Modeler) |
-| SongModels | Core data models (SongDNA, FullSong, PerformanceParams, FormModel, HarmonyModel, RhythmModel, PitchModel, OrchestrationModel) |
-| SongAlgorithm | Enrichment fields (MotifDNA, HarmonicField, RhythmicIdentity, SpectralProfile, SpatialIdentity, RoleMap, etc.) |
-| StateVector | 16D psychoacoustic state representation (SIMD16<Float>, immutable, NaN-guarded) |
-| AppTheme | Protocol for app-level theming (WhiteRoomTheme) |
-| LiveEngine | FFI-backed engine implementation for production use |
-| MockEngine | Deterministic engine implementation for testing and previews |
-| DSPTypes | Parameter metadata, pedal types, modeler kinds, CPU classifications |
+Public here:
 
-### Sound Modeler System (C++)
+- system boundaries
+- design rationale
+- technology choices
+- data/execution flow
+- integration patterns
+- current vs planned status where relevant
 
-| Component | Purpose |
-|-----------|---------|
-| ISoundModeler | Abstract interface for all modelers (prepare, process, reset, latency, kind, cpuClass) |
-| SoundModelerChain | Ordered modeler processor with ping-pong scratch buffers |
-| AmpCaptureModeler | Neural amp simulation (NAM Core v0.5.2) |
-| CabinetIRModeler | Speaker/microphone impulse response convolution |
-| RoomIRModeler | Room/space convolution reverb with predelay |
-| ConsoleModeler | Analog console summing emulation (encode/decode) |
-| TapeModeler | Tape saturation + HF rolloff |
-| TransformerModeler | Preamp/output transformer character |
-| CircuitFilterModeler | ZDF analog filter models (ladder, SVF, OTA) |
-| PhysicalInstrumentModeler | Karplus-Strong+, modal resonators |
-| PerformanceModeler | Seeded deterministic control curves |
-| NeuralFXModeler | ONNX/RTNeural generic neural FX |
+Kept private:
 
-### C++ Engine Layer
-
-| Component | Purpose |
-|-----------|---------|
-| HouseBandBridgeEngine | Unified DSP engine for all synthesis |
-| AudioGraph | Dynamic voice allocation and audio processing graph |
-| VoiceAllocator | Deterministic voice management (mono/poly/drum policies) |
-| ParameterManager | 10,000+ parameters with automation, smoothing, modulation |
-| ModulationMatrix | LFO/envelope/random to destination routing |
-| ParameterRegistry | Canonical ParamID namespace (487 params) |
-| PresetManager | Factory/user presets with validation and morphing |
-| HouseBand | 16-channel mixer, transport, song playback, orchestration |
-| SongBridge | HouseBand to HouseBandBridge wiring |
-| ProjectionEngine | Projects song data into renderable audio graphs |
-
-### C++ DSP Layer
-
-| Component | Purpose |
-|-----------|---------|
-| AdditiveModule | Harmonic synthesis with per-partial control |
-| GranularModule | Granular synthesis with grain scheduling |
-| SpectralModule | FFT-based spectral synthesis |
-| ModalModule | Physical modeling via resonator banks |
-| ChaosModule | Strange attractor synthesis (Lorenz/Rossler/Chen) |
-| HarmonicBank | Additive partial engine with deterministic phase |
-| GrainVoice | Individual grain processing |
-| ModalBank | Resonator bank for physical modeling |
-| DeterministicRNG | Seed-based reproducible random generation |
-
-### C API / FFI Layer
-
-| Component | Purpose |
-|-----------|---------|
-| HouseBandFFI | C FFI for HouseBand (Swift integration) |
-| HouseBandBridgeFFI | C FFI for HouseBandBridgeEngine |
-| AudioThreadMonitor | Real-time audio thread health monitoring |
-| WR_Modeler_* | Generic C API for sound modeler operations |
-
-### Swift Frontend
-
-| Component | Purpose |
-|-----------|---------|
-| SharedModels | All data models (SongData, Preset, Instrument, etc.) |
-| SharedFFI | @_silgen_name declarations and bridge implementations |
-| SharedManagers | Preset discovery, song management, services |
-| SharedAudio | HouseBandActor, NativeAudioEngine, AudioEngineBackend |
-| ViewsDesign | Design tokens (colors, typography, spacing, animations) |
-| ViewsCore | Platform adaptations, transitions, shared utilities |
-| ViewsControls | Knobs, faders, mixer, waveform, strip views |
-| SharedViewModels | State management (undo/redo, timeline, console) |
-| SwiftFrontendCore | WhiteRoomCAPI, SchillingerGenerator, composition integration |
-
-### Voice Core ML Pipeline
-
-| Component | Purpose |
-|-----------|---------|
-| VoiceModelCoreML | Core ML model loading and inference |
-| VoiceInferenceManager | Manages inference lifecycle and scheduling |
-| VoiceThermalManager | Adaptive inference rate based on thermal state |
-| VoiceModelBridge | FFI bridge to C++ DDSP engine |
-| VoiceModelEngine | C++ state machine with DSP fallback, overlap-add |
-| VoiceModelCAPI | C API bridge for voice model engine |
+- production source code
+- proprietary DSP implementations and presets
+- internal training data
+- private prompts/configuration
+- credentials
+- unpublished product state
 
 ---
 
-## Testing
+## Related projects
 
-| Dimension | Coverage |
-|-----------|----------|
-| C++ core | >= 90% |
-| Swift frontend | >= 85% |
-| WhiteRoomKit | >= 80% (all models Codable round-trip, StateVector NaN guards) |
-| Sound Modelers | >= 80% (golden render tests for every modeler) |
-| FFI / C API / Transport | 100% |
-| Total test count | 804+ |
-| Test frameworks | Google Test (C++), XCTest + Swift Testing (Swift), RapidCheck (property-based) |
-| Fuzz/stress | libFuzzer harnesses, AFL++ on Pi, thermal stress, RT safety guards |
+### [GSA — Governed Stewardship Architecture](https://github.com/bretbouchard/gsa-system)
+The general architecture used to keep models, state, evidence, capabilities and side effects separate.
+
+### [Volta System](https://github.com/bretbouchard/volta-system)
+The same governed-system ideas applied to electronics design, where requirements and deterministic verification must survive all the way to manufacturing.
 
 ---
 
-## Real-Time Constraints
+## Status
 
-For DSP code, these rules are enforced:
-
-- No allocation in audio thread
-- No blocking operations
-- Bounded execution within buffer period (4.5ms total per voice)
-- `mlockall()` for audio thread memory
-- CPU affinity pinning to isolated cores
-- `SCHED_FIFO` real-time priority on Linux
-- `ScopedNoAllocation` guard verifies zero heap allocations in audio callback
-- Lock-free SPSC queues for MIDI and parameter updates
-
----
-
-## Document Conventions
-
-- Architecture diagrams use ASCII art for portability
-- Each pillar has its own README.md
-- This repository contains **documentation only** -- no implementation code
-
----
-
-## License
-
-Documentation only. All implementation code remains proprietary.
+White Room is under active development. This atlas should describe current implementation honestly and label experimental/planned capabilities rather than presenting them as shipped.
