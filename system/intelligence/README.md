@@ -50,7 +50,16 @@ This is the White Room application of [GSA — Governed Stewardship Architecture
               +-------------------+
               | Song / Engine     |
               | accepted mutation |
+              +---------+---------+
+                        |
+                        v
               +-------------------+
+              | Observation       |
+              | user/runtime      |
+              | consequences      |
+              +---------+---------+
+                        |
+                        +----> GSA Modeled World
 ```
 
 A model can reason about the song and propose operations. It does not directly replace canonical song state or bypass engine contracts.
@@ -83,6 +92,8 @@ Examples include:
 - user-authored vs generated material
 - current engine capabilities
 - relevant user musical preferences and project intent
+- expected outcomes for consequential product or system changes
+- observed outcome evidence where applicable
 
 A model may receive a projection of these objects. It does not become their source of truth.
 
@@ -183,6 +194,41 @@ Where expected musical events are known, tests can verify that notes were not dr
 
 ---
 
+## Reality Feedback and Outcome Validation
+
+White Room participates in GSA's shared Reality Feedback Loop:
+
+```text
+Observe → Evidence → Interpret → Investigate → Decide → Plan → Govern → Execute → Verify → Observe
+```
+
+White Room may contribute evidence such as:
+
+- crashes and regressions
+- DSP glitches, underruns, and performance measurements
+- repeated corrective actions
+- abandoned or repeatedly retraced workflows
+- recurring musical and tonal preferences
+- mixer, instrument, and effect interaction patterns
+- playback/render discrepancies
+- publishing failures
+- explicit user feedback
+
+These observations are evidence, not automatic requirements. A repeated action or complaint may justify investigation, but White Room must not silently convert behavioral telemetry into autonomous product changes.
+
+Implementation and outcome remain separate:
+
+```text
+Implementation: Not Started → Executing → Implemented → Verified
+Outcome:        Not Observed → Observing → Outcome Validated | Outcome Failed | Inconclusive
+```
+
+A UI or engine change may pass every test and still fail to improve the workflow or musical result it was intended to improve. `Verified` therefore does not mean `Outcome Validated`.
+
+Where appropriate, White Room should preserve the expected outcome before a consequential change and later return observed evidence to the GSA Modeled World and Historian. Failed or inconclusive outcomes may become new unknowns or governed follow-up work.
+
+---
+
 ## Local Intelligence
 
 White Room is designed to take advantage of Apple's on-device intelligence stack where it is appropriate, including Foundation Models on supported operating systems and hardware.
@@ -210,6 +256,8 @@ The same general rules still apply:
 - actions happen through explicit capabilities
 - important output is testable and inspectable
 - durable preferences and project intent belong in application memory/state, not a prompt transcript
+- observations become governed evidence rather than silently becoming requirements
+- implementation verification and outcome validation remain distinct
 
 White Room emphasizes fluid creative interaction rather than heavyweight planning. GSA provides the safety and state boundary without turning music-making into project-management UI.
 
@@ -230,5 +278,6 @@ White Room's intelligence layer sits inside a larger production system spanning:
 - multi-platform Apple UI
 - real-time audio constraints
 - automated unit, integration, and end-to-end testing
+- governed reality feedback and outcome validation
 
 That combination is deliberate: the AI system has to operate against a real product and real-time engine rather than a standalone chat demo.
