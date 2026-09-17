@@ -194,15 +194,17 @@ Where expected musical events are known, tests can verify that notes were not dr
 
 ---
 
-## Reality Feedback and Outcome Validation
+## Audio Metering
 
-White Room participates in GSA's shared Reality Feedback Loop:
+Every AI change lands with its readings attached:
 
-```text
-Observe → Evidence → Interpret → Investigate → Decide → Plan → Govern → Execute → Verify → Observe
-```
+- the number it was supposed to move, before and after — chorus density 3.1 → 4.8 notes per beat
+- the constraints it had to hold — harmony untouched, no duplicate or dropped events, voice limits respected
+- whether it played clean through the real engine
 
-White Room may contribute evidence such as:
+Then one human verdict: **keep or undo**. Undo counts. A reverted change is recorded as a failed outcome — the system does not quietly keep it, and passing tests does not count as success.
+
+White Room also records what actually happens while it runs:
 
 - crashes and regressions
 - DSP glitches, underruns, and performance measurements
@@ -214,18 +216,9 @@ White Room may contribute evidence such as:
 - publishing failures
 - explicit user feedback
 
-These observations are evidence, not automatic requirements. A repeated action or complaint may justify investigation, but White Room must not silently convert behavioral telemetry into autonomous product changes.
+These records are evidence, not requirements. A repeated action or complaint justifies investigation; White Room never converts recorded behavior into autonomous product changes.
 
-Implementation and outcome remain separate:
-
-```text
-Implementation: Not Started → Executing → Implemented → Verified
-Outcome:        Not Observed → Observing → Outcome Validated | Outcome Failed | Inconclusive
-```
-
-A UI or engine change may pass every test and still fail to improve the workflow or musical result it was intended to improve. `Verified` therefore does not mean `Outcome Validated`.
-
-Where appropriate, White Room should preserve the expected outcome before a consequential change and later return observed evidence to the GSA Modeled World and Historian. Failed or inconclusive outcomes may become new unknowns or governed follow-up work.
+Expected outcomes are written down before consequential changes and checked against what actually happened. A change can be shipped and fully tested and still have failed to improve the thing it was meant to improve — both facts get recorded, and failures become named follow-up work instead of quietly dropped evidence.
 
 ---
 
@@ -257,7 +250,7 @@ The same general rules still apply:
 - important output is testable and inspectable
 - durable preferences and project intent belong in application memory/state, not a prompt transcript
 - observations become governed evidence rather than silently becoming requirements
-- implementation verification and outcome validation remain distinct
+- a change passing tests and a change you keep are different facts
 
 White Room emphasizes fluid creative interaction rather than heavyweight planning. GSA provides the safety and state boundary without turning music-making into project-management UI.
 
@@ -278,6 +271,6 @@ White Room's intelligence layer sits inside a larger production system spanning:
 - multi-platform Apple UI
 - real-time audio constraints
 - automated unit, integration, and end-to-end testing
-- governed reality feedback and outcome validation
+- audio metering on every render — readings and keep-or-undo verdicts recorded as evidence
 
 That combination is deliberate: the AI system has to operate against a real product and real-time engine rather than a standalone chat demo.
