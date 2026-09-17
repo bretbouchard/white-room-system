@@ -165,7 +165,7 @@ This separation keeps composition logic testable and prevents AI concerns from l
 
 ## GSA Relationship
 
-White Room applies [GSA — Governed Stewardship Architecture](https://github.com/bretbouchard/gsa-system) in a deliberately lightweight creative form.
+White Room applies [GSA — Governed Stewardship Architecture](https://github.com/bretbouchard/gsa-system) in a lightweight creative form.
 
 The shared principles are:
 

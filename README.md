@@ -126,7 +126,7 @@ This separation makes UI, composition and AI work testable without putting model
 
 ## Governed intelligence
 
-White Room applies [GSA — Governed Stewardship Architecture](https://github.com/bretbouchard/gsa-system) in a deliberately lightweight creative form.
+White Room applies [GSA — Governed Stewardship Architecture](https://github.com/bretbouchard/gsa-system) in a lightweight creative form.
 
 The central rule is:
 
@@ -211,7 +211,7 @@ Key characteristics include:
 - `WhiteRoomEngine` protocol with domain-specific APIs
 - deterministic `MockEngine` for tests and previews
 - `LiveEngine` for the production C++ path
-- remote transport behind the same conceptual contract
+- remote transport behind the same interface
 - serializable/versioned state models
 - separation between application models and real-time implementation details
 
@@ -284,7 +284,7 @@ The goal is **no vibes-based acceptance**: where the system can know what correc
 
 ---
 
-## What this public atlas demonstrates
+## What the system is built on
 
 For an engineer evaluating the project, White Room is an example of integrating AI into a large stateful native application rather than building an isolated model demo.
 

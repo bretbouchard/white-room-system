@@ -157,7 +157,7 @@ User request:
 8. Play the result through the same engine used by the normal UI.
 ```
 
-The important distinction is that the model does not regenerate an opaque song document. It operates against structured state through controlled capabilities.
+The model never regenerates an opaque song document. It works on structured state through controlled tools.
 
 ---
 
@@ -256,7 +256,7 @@ White Room emphasizes fluid creative interaction rather than heavyweight plannin
 
 ---
 
-## What This Demonstrates
+## The system it lives in
 
 White Room's intelligence layer sits inside a larger production system spanning:
 
@@ -273,4 +273,4 @@ White Room's intelligence layer sits inside a larger production system spanning:
 - automated unit, integration, and end-to-end testing
 - audio metering on every render — readings and keep-or-undo verdicts recorded as evidence
 
-That combination is deliberate: the AI system has to operate against a real product and real-time engine rather than a standalone chat demo.
+None of it is standalone: the AI operates against a real product and a real-time engine, not a chat demo.

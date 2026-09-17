@@ -84,7 +84,7 @@ Key ideas:
 - `WhiteRoomEngine` root protocol with domain APIs
 - `LiveEngine` for production FFI
 - `MockEngine` for deterministic tests and previews
-- remote engine transport behind the same conceptual contract
+- remote engine transport behind the same interface
 - serialization/versioning boundaries
 
 ## Intelligence
