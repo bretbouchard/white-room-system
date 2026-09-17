@@ -6,6 +6,16 @@ White Room is a music-writing and performance system built around a simple idea:
 
 This repository is the public **System Atlas** for a private implementation. It documents the architecture, engineering boundaries, technology choices, and current product direction without publishing proprietary source code.
 
+<br>
+
+<div align="center">
+*In the white room with black curtains, near the station...*
+
+<sub>Pete Brown, "White Room" (Cream, 1968)</sub>
+</div>
+
+<br>
+
 ---
 
 ## Why this system is interesting
@@ -330,4 +340,8 @@ The same governed-system ideas applied to electronics design, where requirements
 
 ## Status
 
-White Room is under active development. This System Atlas should describe current implementation honestly and label experimental/planned capabilities rather than presenting them as shipped.
+White Room is in alpha testing. This System Atlas should describe current implementation honestly and label experimental/planned capabilities rather than presenting them as shipped.
+
+## Alpha Access
+
+Email `bretbouchard@gmail.com` with the platform you want to test (`iPhone/iPad`, `Apple TV`, or `Mac`) and your TestFlight Apple ID email if it differs. VoiceSynth AUv3 arrives through a host app.
