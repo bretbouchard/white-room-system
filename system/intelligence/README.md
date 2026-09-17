@@ -196,7 +196,7 @@ Where expected musical events are known, tests can verify that notes were not dr
 
 ## Audio Metering
 
-Every AI change lands with its readings attached:
+Every AI change is metered, not guessed at: the render's spectrogram becomes a feature vector, and the readings are that vector compared before and after:
 
 - the number it was supposed to move, before and after — chorus density 3.1 → 4.8 notes per beat
 - the constraints it had to hold — harmony untouched, no duplicate or dropped events, voice limits respected
