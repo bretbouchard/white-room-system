@@ -9,7 +9,7 @@ ML-powered features for White Room.
 The ML layer provides:
 
 - **Voice Synthesis** — Core ML DDSP voice instrument with real-time timbre control
-- **Composition Assistance** — AI chat, ML suggestions, mix coaching
+- **Composition Assistance** — Natural-language chat, suggestions, mix coaching
 - **Audio Analysis** — Style classification, preset recommendations
 - **Voice/Choir** — Multi-voice choir mode with individual controls
 
@@ -125,7 +125,7 @@ Rate changes use `DispatchSourceTimer.schedule()` on the active timer — no rec
 
 ---
 
-## AI Chat and Composition Assistance
+## Chat and Composition Assistance
 
 ### Chat Interface
 
@@ -143,7 +143,7 @@ integration code also remains in the repo.
 
 UI affordances for:
 - **Preset recommendations** — Based on current song context
-- **Mix coaching** — AI suggests EQ, compression, level adjustments
+- **Mix coaching** — Suggestions for EQ, compression, and level adjustments
 - **Style classification** — ML classifies song style and suggests complementary changes
 - **Semantic preset search** — Find presets by description, not just name
 

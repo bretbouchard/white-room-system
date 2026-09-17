@@ -493,11 +493,11 @@ currentValue = currentValue + (targetValue - currentValue) × smoothCoeff
 | **Giants** | Additive | Large-scale additive pads and textures |
 | **MajorModulator** | Modulation | Dedicated modulation synth |
 | **CDC4046** | PLL | PLL-based synthesis (4046 chip emulation) |
-| **VoiceSynth** | DDSP + ML | AI Voice Synthesis with Core ML |
+| **VoiceSynth** | DDSP + ML | On-device voice synthesis with Core ML |
 
-VoiceSynth uses DDSP + Core ML for real-time neural voice synthesis. See the [AI Voice Synthesis](#ai-voice-synthesis--voicesynth) section below for the full pipeline and parameters.
+VoiceSynth uses DDSP + Core ML for real-time neural voice synthesis. See the [On-device voice synthesis](#on-device-voice-synthesis--voicesynth) section below for the full pipeline and parameters.
 
-### AI Voice Synthesis — VoiceSynth
+### On-Device Voice Synthesis — VoiceSynth
 
 **Real-time DDSP voice synthesis powered by Core ML.**
 
