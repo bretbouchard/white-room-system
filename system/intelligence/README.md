@@ -196,11 +196,11 @@ Where expected musical events are known, tests can verify that notes were not dr
 
 ## Audio Metering
 
-Every AI change is metered, not guessed at: the render's spectrogram becomes a feature vector, and the readings are that vector compared before and after:
+The music is metered in its audio form. The song — or a proposed change — is written out as a spectrogram, and the model reads it directly, saying what an engineer would say: that's out of key, that EQ is too hot, the low mids are masking. No render required for the check.
 
 - the number it was supposed to move, before and after — chorus density 3.1 → 4.8 notes per beat
 - the constraints it had to hold — harmony untouched, no duplicate or dropped events, voice limits respected
-- whether it played clean through the real engine
+- the findings, read straight off the spectrogram — out of key, EQ too high, masking
 
 Then one human verdict: **keep or undo**. Undo counts. A reverted change is recorded as a failed outcome — the system does not quietly keep it, and passing tests does not count as success.
 
