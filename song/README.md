@@ -164,4 +164,4 @@ Math / rules      ->   validation + transformation->   Hooks, arc, structure
               Overlay Lenses | Density Curves | Ambient Info
 ```
 
-Theory explains why and how music works. The composition engine turns intent into bounded musical change. Songwriting supplies artistic direction. The workspace keeps all three inside the same song rather than forcing the musician into separate tools.
+Theory explains why & how music works. The composition engine turns intent into bounded musical change. Songwriting supplies artistic direction. The workspace keeps all three inside the same song rather than forcing the musician into separate tools.
